@@ -40,6 +40,7 @@ export default function SignInPage() {
     if (!res.success) return toast.error(res.message);
 
     router.push('/');
+    router.refresh();
   }
 
   async function handleSignInWithGoogle() {
@@ -48,6 +49,7 @@ export default function SignInPage() {
     if (!res.success) return toast.error(res.message);
 
     window.location.assign(res.data!.url!);
+    router.refresh();
   }
 
   return (
