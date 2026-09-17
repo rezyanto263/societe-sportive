@@ -1,6 +1,6 @@
 'use client';
 
-import { PhoneInput } from '@/components/app/phone-input';
+import { PhoneInput } from '@/components/app/form/phone-input';
 import { Button } from '@/components/ui/button';
 import {
   Field,
@@ -19,12 +19,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircleIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export default function SignInPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const form = useForm<SignInData>({
     resolver: zodResolver(AuthSchema.signIn),
@@ -36,10 +37,11 @@ export default function SignInPage() {
 
   async function handleSignIn(data: SignInData) {
     const res = await signIn(data);
+    const callbackUrl = searchParams.get('callbackUrl');
 
     if (!res.success) return toast.error(res.message);
 
-    router.push('/');
+    router.push(callbackUrl ?? '/');
     router.refresh();
   }
 
