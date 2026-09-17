@@ -1,6 +1,6 @@
 'use client';
 
-import { PhoneInput } from '@/components/app/phone-input';
+import { PhoneInput } from '@/components/app/form/phone-input';
 import { Button } from '@/components/ui/button';
 import {
   Field,
@@ -30,7 +30,9 @@ export default function OnboardingChangePhoneNumberPage() {
     defaultValues: { phoneNumber: '' },
   });
 
-  async function handleChangePhoneNumber(data: OnboardingChangePhoneNumberData) {
+  async function handleChangePhoneNumber(
+    data: OnboardingChangePhoneNumberData,
+  ) {
     const res = await changePhoneNumber(data);
 
     if (!res.success) return toast.error(res.message);
@@ -38,7 +40,7 @@ export default function OnboardingChangePhoneNumberPage() {
     // eslint-disable-next-line react-hooks/purity
     const expiresAt = Date.now() + RESEND_COOLDOWN * 1000;
     localStorage.setItem(RESEND_KEY, expiresAt.toString());
-    toast.success(res.message)
+    toast.success(res.message);
     router.push(`/onboarding/verify`);
     router.refresh();
   }

@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PhoneInput } from '@/components/app/phone-input';
+import { PhoneInput } from '@/components/app/form/phone-input';
 import { Controller, useForm } from 'react-hook-form';
 import { SignUpData } from '@/features/auth/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -142,7 +142,8 @@ export default function SignUpPage() {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="confirm-password">
-                Konfirmasi Kata Sandi <span className="text-destructive">*</span>
+                Konfirmasi Kata Sandi{' '}
+                <span className="text-destructive">*</span>
               </FieldLabel>
               <Input
                 {...field}

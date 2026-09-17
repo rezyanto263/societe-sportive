@@ -1,6 +1,6 @@
 'use client';
 
-import { PhoneInput } from '@/components/app/phone-input';
+import { PhoneInput } from '@/components/app/form/phone-input';
 import { useUser } from '@/components/providers/user-provider';
 import { Button } from '@/components/ui/button';
 import {
@@ -151,7 +151,8 @@ export default function OnboardingProfilePage() {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="confirm-password">
-                Konfirmasi Kata Sandi <span className="text-destructive">*</span>
+                Konfirmasi Kata Sandi{' '}
+                <span className="text-destructive">*</span>
               </FieldLabel>
               <Input
                 {...field}
