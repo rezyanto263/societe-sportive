@@ -29,6 +29,7 @@ export default function SignUpPage() {
       phoneNumber: '',
       password: '',
       confirmPassword: '',
+      gender: 'male',
     },
   });
 
@@ -70,6 +71,20 @@ export default function SignUpPage() {
               field={field}
               fieldState={fieldState}
               label="Nama Lengkap"
+              required
+            />
+          )}
+        />
+
+        <Controller
+          name="gender"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Jenis Kelamin"
+              type="gender"
               required
             />
           )}

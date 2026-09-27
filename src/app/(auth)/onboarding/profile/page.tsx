@@ -1,22 +1,16 @@
 'use client';
 
 import InputField from '@/components/app/form/input-field';
-import { PhoneInput } from '@/components/app/form/phone-input';
 import { useUser } from '@/components/providers/user-provider';
 import { Button } from '@/components/ui/button';
 import {
   Field,
-  FieldDescription,
-  FieldError,
   FieldGroup,
-  FieldLabel,
 } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import saveProfile from '@/features/auth/actions/onboarding/save-profile';
 import { AuthSchema } from '@/features/auth/schema';
 import { OnboardingProfileData } from '@/features/auth/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircleIcon, InfoIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -29,13 +23,14 @@ export default function OnboardingProfilePage() {
   const { user } = useUser();
   const router = useRouter();
 
-  const form = useForm({
+  const form = useForm<OnboardingProfileData>({
     resolver: zodResolver(AuthSchema.onboardingProfile),
     defaultValues: {
       name: '',
       phoneNumber: '',
       password: '',
       confirmPassword: '',
+      gender: 'male',
     },
   });
 
@@ -46,6 +41,7 @@ export default function OnboardingProfilePage() {
         phoneNumber: '',
         password: '',
         confirmPassword: '',
+        gender: 'male',
       });
     }
   }, [form, user]);
@@ -83,6 +79,20 @@ export default function OnboardingProfilePage() {
               field={field}
               fieldState={fieldState}
               label="Nama Lengkap"
+              required
+            />
+          )}
+        />
+
+        <Controller
+          name="gender"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Jenis Kelamin"
+              type="gender"
               required
             />
           )}

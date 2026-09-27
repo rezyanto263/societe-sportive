@@ -32,7 +32,7 @@ export const auth = betterAuth({
         console.log(`The code OTP for ${phoneNumber} is ${code}`);
       },
 
-      sendPasswordResetOTP:  async ({ phoneNumber, code }) => {
+      sendPasswordResetOTP: async ({ phoneNumber, code }) => {
         console.log(`The code OTP for ${phoneNumber} is ${code}`);
       },
 
@@ -50,6 +50,10 @@ export const auth = betterAuth({
     modelName: 'users',
     additionalFields: {
       phoneNumber: {
+        type: 'string',
+        required: false,
+      },
+      gender: {
         type: 'string',
         required: false,
       },

@@ -12,7 +12,7 @@ import { headers } from 'next/headers';
 export default async function saveProfile(data: OnboardingProfileData) {
   try {
     const user = await getUser(true);
-    
+
     const isPhoneNumberExists = await db.query.users.findFirst({
       where: { phoneNumber: data.phoneNumber },
     });
@@ -24,7 +24,7 @@ export default async function saveProfile(data: OnboardingProfileData) {
     }
 
     const statusUser = await auth.api.updateUser({
-      body: { name: data.name },
+      body: { name: data.name, gender: data.gender },
       headers: await headers(),
     });
 

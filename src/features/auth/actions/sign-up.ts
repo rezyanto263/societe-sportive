@@ -25,6 +25,7 @@ export default async function signUp(data: SignUpData) {
         password: data.password,
         data: {
           phoneNumber: data.phoneNumber,
+          gender: data.gender,
         },
       },
     });

@@ -2,12 +2,15 @@ import { PhoneInput } from '@/components/app/form/phone-input';
 import SecretInput from '@/components/app/form/secret-input';
 import {
   Field,
+  FieldContent,
   FieldDescription,
   FieldError,
   FieldLabel,
+  FieldTitle,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { AlertCircleIcon, InfoIcon } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { AlertCircleIcon, InfoIcon, MarsIcon, VenusIcon } from 'lucide-react';
 import {
   ControllerFieldState,
   ControllerRenderProps,
@@ -60,9 +63,7 @@ export default function InputField<
       {description && (
         <div className="flex items-center gap-2">
           <InfoIcon className="text-muted-foreground shrink-0" size={14} />
-          <FieldDescription>
-            {description}
-          </FieldDescription>
+          <FieldDescription>{description}</FieldDescription>
         </div>
       )}
     </Field>
@@ -93,8 +94,43 @@ function InputComponent<T extends FieldValues, N extends FieldPath<T>>({
       return <SecretInput {...field} aria-invalid={fieldState.invalid} />;
     }
 
+    return <Input {...field} aria-invalid={fieldState.invalid} type={type} />;
+  } else if (type === 'gender') {
     return (
-      <Input {...field} aria-invalid={fieldState.invalid} type={type} />
+      <RadioGroup
+        defaultValue={field.value}
+        className="flex items-center gap-3 max-sm:flex-col"
+        data-invalid={fieldState.invalid}
+      >
+        <FieldLabel htmlFor="male" className="cursor-pointer">
+          <Field orientation="horizontal" data-invalid={fieldState.invalid}>
+            <FieldContent>
+              <FieldTitle>
+                <MarsIcon className="text-sky-800" /> Laki-laki
+              </FieldTitle>
+            </FieldContent>
+            <RadioGroupItem
+              value="male"
+              id="male"
+              aria-invalid={fieldState.invalid}
+            />
+          </Field>
+        </FieldLabel>
+        <FieldLabel htmlFor="female" className="cursor-pointer">
+          <Field orientation="horizontal" data-invalid={fieldState.invalid}>
+            <FieldContent>
+              <FieldTitle>
+                <VenusIcon className="text-pink-800" /> Perempuan
+              </FieldTitle>
+            </FieldContent>
+            <RadioGroupItem
+              value="female"
+              id="female"
+              aria-invalid={fieldState.invalid}
+            />
+          </Field>
+        </FieldLabel>
+      </RadioGroup>
     );
   }
 }

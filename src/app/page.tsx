@@ -18,15 +18,14 @@ export default function HomePage() {
       {!!user && (
         <ul>
           <li>Name: {user?.name}</li>
+          <li>Gender: {user?.gender}</li>
           <li>Email: {user?.email}</li>
           <li>Email Verified: {user?.emailVerified ? 'Yes' : 'No'}</li>
           <li>Phone Number: {user?.phoneNumber}</li>
           <li>
             Phone Number Verified: {user?.phoneNumberVerified ? 'Yes' : 'No'}
           </li>
-          <li>
-            Role: {user?.role}
-          </li>
+          <li>Role: {user?.role}</li>
         </ul>
       )}
       {!!user ? (

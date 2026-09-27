@@ -19,6 +19,7 @@ export class AuthSchema {
   static signUp = z
     .object({
       name: z.string().max(225).nonempty('Nama lengkap harus diisi.'),
+      gender: z.enum(['male', 'female']),
       phoneNumber: z.string().nonempty('Nomor ponsel harus diisi.'),
       password: z
         .string()
@@ -60,7 +61,10 @@ export class AuthSchema {
   static verifyPasswordReset = z
     .object({
       phoneNumber: z.string().nonempty('Nomor ponsel harus diisi.'),
-      otp: z.string().length(6, 'Kode verifikasi harus 6 digit.').nonempty('Kode verifikasi harus diisi.'),
+      otp: z
+        .string()
+        .length(6, 'Kode verifikasi harus 6 digit.')
+        .nonempty('Kode verifikasi harus diisi.'),
       password: z
         .string()
         .min(8, 'Kata sandi harus antara 8-20 karakter.')
