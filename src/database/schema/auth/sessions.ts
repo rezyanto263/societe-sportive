@@ -1,4 +1,4 @@
-import { users } from '@/database/schema/users';
+import { users } from '@/database/schema/auth/users';
 import { timestamps } from '@/database/utils';
 import { index, snakeCase, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
