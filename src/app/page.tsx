@@ -24,6 +24,9 @@ export default function HomePage() {
           <li>
             Phone Number Verified: {user?.phoneNumberVerified ? 'Yes' : 'No'}
           </li>
+          <li>
+            Role: {user?.role}
+          </li>
         </ul>
       )}
       {!!user ? (

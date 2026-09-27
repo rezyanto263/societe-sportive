@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 import { UserProvider } from '@/components/providers/user-provider';
 import getUser from '@/features/auth/actions/get-user';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { ThemeProvider } from '@/components/providers/theme-provider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -21,18 +23,19 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="en"
-      className={cn(
-        'h-full',
-        'antialiased',
-        'font-sans',
-        inter.variable,
-        'dark',
-      )}
+      lang="id"
+      className={cn('h-full', 'antialiased', inter.variable)}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <Toaster />
-        <UserProvider user={user}>{children}</UserProvider>
+        <UserProvider user={user}>
+          <ThemeProvider>
+            <TooltipProvider>
+              <Toaster />
+              {children}
+            </TooltipProvider>
+          </ThemeProvider>
+        </UserProvider>
       </body>
     </html>
   );
