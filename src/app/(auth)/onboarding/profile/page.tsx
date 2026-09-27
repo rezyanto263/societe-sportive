@@ -1,5 +1,6 @@
 'use client';
 
+import InputField from '@/components/app/form/input-field';
 import { PhoneInput } from '@/components/app/form/phone-input';
 import { useUser } from '@/components/providers/user-provider';
 import { Button } from '@/components/ui/button';
@@ -78,103 +79,56 @@ export default function OnboardingProfilePage() {
           name="name"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="name">
-                Nama Lengkap <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input {...field} aria-invalid={fieldState.invalid} />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon className="text-destructive" size={14} />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Nama Lengkap"
+              required
+            />
           )}
         />
+
         <Controller
           name="phoneNumber"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="phoneNumber">
-                Nomor Ponsel <span className="text-destructive">*</span>
-              </FieldLabel>
-              <PhoneInput
-                {...field}
-                aria-invalid={fieldState.invalid}
-                defaultCountry="ID"
-              />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon className="text-destructive" size={14} />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-              <div className="flex items-center gap-2">
-                <InfoIcon
-                  className="text-muted-foreground shrink-0"
-                  size={14}
-                />
-                <FieldDescription>
-                  Nomor ponsel harus valid dan dapat dihubungi.
-                </FieldDescription>
-              </div>
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Nomor Ponsel"
+              description="Nomor ponsel harus valid dan dapat dihubungi."
+              type="tel"
+              required
+            />
           )}
         />
+
         <Controller
           name="password"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="password">
-                Kata Sandi <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input
-                {...field}
-                aria-invalid={fieldState.invalid}
-                type="password"
-              />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon className="text-destructive" size={14} />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Kata Sandi"
+              required
+              secret
+            />
           )}
         />
+
         <Controller
           name="confirmPassword"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="confirm-password">
-                Konfirmasi Kata Sandi{' '}
-                <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input
-                {...field}
-                aria-invalid={fieldState.invalid}
-                type="password"
-              />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon className="text-destructive" size={14} />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-              <div className="flex items-center gap-2">
-                <InfoIcon
-                  className="text-muted-foreground shrink-0"
-                  size={14}
-                />
-                <FieldDescription>
-                  Pastikan kata sandi yang Anda masukkan cocok.
-                </FieldDescription>
-              </div>
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Konfirmasi Kata Sandi"
+              description="Pastikan kata sandi yang Anda masukkan cocok."
+              required
+              secret
+            />
           )}
         />
         <Field>

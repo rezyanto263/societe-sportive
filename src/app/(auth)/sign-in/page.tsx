@@ -1,6 +1,7 @@
 'use client';
 
-import { PhoneInput } from '@/components/app/form/phone-input';
+import InputField from '@/components/app/form/input-field';
+import SecretInput from '@/components/app/form/secret-input';
 import { Button } from '@/components/ui/button';
 import {
   Field,
@@ -10,7 +11,6 @@ import {
   FieldLabel,
   FieldSeparator,
 } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import signIn from '@/features/auth/actions/sign-in';
 import signInWithGoogle from '@/features/auth/actions/sign-in-with-google';
 import { AuthSchema } from '@/features/auth/schema';
@@ -63,34 +63,24 @@ export default function SignInPage() {
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Masuk ke Akun</h1>
           <p className="text-sm text-balance text-muted-foreground">
-            Isi formulir di bawah ini untuk masuk ke akun Anda
+            Isi formulir di bawah ini untuk masuk ke akun Anda.
           </p>
         </div>
+
         <Controller
           name="phoneNumber"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="phoneNumber">
-                Nomor Ponsel <span className="text-destructive">*</span>
-              </FieldLabel>
-              <PhoneInput
-                {...field}
-                aria-invalid={fieldState.invalid}
-                defaultCountry="ID"
-              />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon
-                    className="text-destructive shrink-0"
-                    size={14}
-                  />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Nomor Ponsel"
+              type="tel"
+              required
+            />
           )}
         />
+
         <Controller
           name="password"
           control={form.control}
@@ -107,11 +97,9 @@ export default function SignInPage() {
                   Lupa kata sandi akun?
                 </Link>
               </div>
-              <Input
-                {...field}
-                aria-invalid={fieldState.invalid}
-                type="password"
-              />
+
+              <SecretInput {...field} aria-invalid={fieldState.invalid} />
+
               {fieldState.invalid && (
                 <div className="flex items-center gap-2">
                   <AlertCircleIcon className="text-destructive" size={14} />
@@ -121,12 +109,15 @@ export default function SignInPage() {
             </Field>
           )}
         />
+
         <Field>
           <Button type="submit" className="cursor-pointer">
             Masuk
           </Button>
         </Field>
+
         <FieldSeparator>Atau lanjutkan dengan</FieldSeparator>
+
         <Field>
           <Button
             variant="outline"

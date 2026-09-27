@@ -1,5 +1,6 @@
 'use client';
 
+import InputField from '@/components/app/form/input-field';
 import { PhoneInput } from '@/components/app/form/phone-input';
 import { Button } from '@/components/ui/button';
 import {
@@ -60,37 +61,22 @@ export default function OnboardingChangePhoneNumberPage() {
             nomor tersebut milikmu.
           </p>
         </div>
+
         <Controller
           name="phoneNumber"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="phoneNumber">
-                Nomor Ponsel Baru<span className="text-destructive">*</span>
-              </FieldLabel>
-              <PhoneInput
-                {...field}
-                aria-invalid={fieldState.invalid}
-                defaultCountry="ID"
-              />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon className="text-destructive" size={14} />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-              <div className="flex items-center gap-2">
-                <InfoIcon
-                  className="text-muted-foreground shrink-0"
-                  size={14}
-                />
-                <FieldDescription>
-                  Nomor ponsel harus valid dan dapat dihubungi.
-                </FieldDescription>
-              </div>
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Nomor Ponsel Baru"
+              description="Nomor ponsel harus valid dan dapat dihubungi."
+              type="tel"
+              required
+            />
           )}
         />
+        
         <Field>
           <Button className="cursor-pointer" type="submit">
             Simpan & Lanjutkan

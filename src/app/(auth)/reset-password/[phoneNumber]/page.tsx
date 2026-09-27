@@ -1,5 +1,6 @@
 'use client';
 
+import InputField from '@/components/app/form/input-field';
 import { Button } from '@/components/ui/button';
 import {
   Field,
@@ -116,6 +117,7 @@ export default function VerifyPasswordResetPage({
             , lalu buat kata sandi baru untuk akun Anda.
           </p>
         </div>
+
         <Controller
           name="otp"
           control={form.control}
@@ -164,60 +166,36 @@ export default function VerifyPasswordResetPage({
             </Field>
           )}
         />
+
         <Controller
           name="password"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="password">
-                Kata Sandi Baru <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input
-                {...field}
-                aria-invalid={fieldState.invalid}
-                type="password"
-              />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon className="text-destructive" size={14} />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Kata Sandi Baru"
+              required
+              secret
+            />
           )}
         />
+
         <Controller
           name="confirmPassword"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="confirm-password">
-                Konfirmasi Kata Sandi Baru{' '}
-                <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input
-                {...field}
-                aria-invalid={fieldState.invalid}
-                type="password"
-              />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon className="text-destructive" size={14} />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-              <div className="flex items-center gap-2">
-                <InfoIcon
-                  className="text-muted-foreground shrink-0"
-                  size={14}
-                />
-                <FieldDescription>
-                  Pastikan kata sandi yang Anda masukkan cocok.
-                </FieldDescription>
-              </div>
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Konfirmasi Kata Sandi Baru"
+              description="Pastikan kata sandi yang Anda masukkan cocok."
+              required
+              secret
+            />
           )}
         />
+        
         <Field>
           <Button type="submit" className="cursor-pointer">
             Verifikasi & Simpan

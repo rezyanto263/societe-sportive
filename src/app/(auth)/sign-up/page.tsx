@@ -4,24 +4,20 @@ import { Button } from '@/components/ui/button';
 import {
   Field,
   FieldDescription,
-  FieldError,
   FieldGroup,
-  FieldLabel,
   FieldSeparator,
 } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PhoneInput } from '@/components/app/form/phone-input';
 import { Controller, useForm } from 'react-hook-form';
 import { SignUpData } from '@/features/auth/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AuthSchema } from '@/features/auth/schema';
-import { AlertCircleIcon, InfoIcon } from 'lucide-react';
 import signInWithGoogle from '@/features/auth/actions/sign-in-with-google';
 import { toast } from 'sonner';
 import signUp from '@/features/auth/actions/sign-up';
 import { useRouter } from 'next/navigation';
+import InputField from '@/components/app/form/input-field';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -62,118 +58,75 @@ export default function SignUpPage() {
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Buat akun baru</h1>
           <p className="text-sm text-balance text-muted-foreground">
-            Isi formulir di bawah ini untuk membuat akun Anda
+            Isi formulir di bawah ini untuk membuat akun Anda.
           </p>
         </div>
+
         <Controller
           name="name"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="name">
-                Nama Lengkap <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input {...field} aria-invalid={fieldState.invalid} />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon className="text-destructive" size={14} />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Nama Lengkap"
+              required
+            />
           )}
         />
+
         <Controller
           name="phoneNumber"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="phoneNumber">
-                Nomor Ponsel <span className="text-destructive">*</span>
-              </FieldLabel>
-              <PhoneInput
-                {...field}
-                aria-invalid={fieldState.invalid}
-                defaultCountry="ID"
-              />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon className="text-destructive" size={14} />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-              <div className="flex items-center gap-2">
-                <InfoIcon
-                  className="text-muted-foreground shrink-0"
-                  size={14}
-                />
-                <FieldDescription>
-                  Nomor ponsel harus valid dan dapat dihubungi.
-                </FieldDescription>
-              </div>
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Nomor Ponsel"
+              description="Nomor ponsel harus valid dan dapat dihubungi."
+              type="tel"
+              required
+            />
           )}
         />
+
         <Controller
           name="password"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="password">
-                Kata Sandi <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input
-                {...field}
-                aria-invalid={fieldState.invalid}
-                type="password"
-              />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon className="text-destructive" size={14} />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Kata Sandi"
+              required
+              secret
+            />
           )}
         />
+
         <Controller
           name="confirmPassword"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="confirm-password">
-                Konfirmasi Kata Sandi{' '}
-                <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input
-                {...field}
-                aria-invalid={fieldState.invalid}
-                type="password"
-              />
-              {fieldState.invalid && (
-                <div className="flex items-center gap-2">
-                  <AlertCircleIcon className="text-destructive" size={14} />
-                  <FieldError errors={[fieldState.error]} />
-                </div>
-              )}
-              <div className="flex items-center gap-2">
-                <InfoIcon
-                  className="text-muted-foreground shrink-0"
-                  size={14}
-                />
-                <FieldDescription>
-                  Pastikan kata sandi yang Anda masukkan cocok.
-                </FieldDescription>
-              </div>
-            </Field>
+            <InputField
+              field={field}
+              fieldState={fieldState}
+              label="Konfirmasi Kata Sandi"
+              description="Pastikan kata sandi yang Anda masukkan cocok."
+              required
+              secret
+            />
           )}
         />
+
         <Field>
           <Button type="submit" className="cursor-pointer">
             Buat Akun
           </Button>
         </Field>
+
         <FieldSeparator>Atau lanjutkan dengan</FieldSeparator>
+
         <Field>
           <Button
             variant="outline"

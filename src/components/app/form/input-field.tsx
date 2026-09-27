@@ -1,0 +1,100 @@
+import { PhoneInput } from '@/components/app/form/phone-input';
+import SecretInput from '@/components/app/form/secret-input';
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { AlertCircleIcon, InfoIcon } from 'lucide-react';
+import {
+  ControllerFieldState,
+  ControllerRenderProps,
+  FieldPath,
+  FieldValues,
+} from 'react-hook-form';
+
+type InputFieldProps<T extends FieldValues, N extends FieldPath<T>> = {
+  field: ControllerRenderProps<T, N>;
+  fieldState: ControllerFieldState;
+  label: string;
+  description?: string;
+  type?: HTMLInputElement['type'];
+  required?: boolean;
+  secret?: boolean;
+};
+
+export default function InputField<
+  T extends FieldValues,
+  N extends FieldPath<T>,
+>({
+  field,
+  fieldState,
+  type = 'text',
+  label,
+  description,
+  required = false,
+  secret = false,
+}: InputFieldProps<T, N>) {
+  return (
+    <Field data-invalid={fieldState.invalid}>
+      <FieldLabel htmlFor={field.name}>
+        {label} {required && <span className="text-destructive">*</span>}
+      </FieldLabel>
+
+      <InputComponent
+        field={field}
+        fieldState={fieldState}
+        secret={secret}
+        type={type}
+      />
+
+      {fieldState.invalid && (
+        <div className="flex items-center gap-2">
+          <AlertCircleIcon className="text-destructive" size={14} />
+          <FieldError errors={[fieldState.error]} />
+        </div>
+      )}
+
+      {description && (
+        <div className="flex items-center gap-2">
+          <InfoIcon className="text-muted-foreground shrink-0" size={14} />
+          <FieldDescription>
+            {description}
+          </FieldDescription>
+        </div>
+      )}
+    </Field>
+  );
+}
+
+type InputComponentProps<T extends FieldValues, N extends FieldPath<T>> = Pick<
+  InputFieldProps<T, N>,
+  'secret' | 'field' | 'fieldState' | 'type'
+>;
+
+function InputComponent<T extends FieldValues, N extends FieldPath<T>>({
+  secret,
+  field,
+  fieldState,
+  type,
+}: InputComponentProps<T, N>) {
+  if (type === 'tel') {
+    return (
+      <PhoneInput
+        {...field}
+        aria-invalid={fieldState.invalid}
+        defaultCountry="ID"
+      />
+    );
+  } else if (type === 'text') {
+    if (secret) {
+      return <SecretInput {...field} aria-invalid={fieldState.invalid} />;
+    }
+
+    return (
+      <Input {...field} aria-invalid={fieldState.invalid} type={type} />
+    );
+  }
+}
