@@ -1,6 +1,4 @@
-import { pgEnum, timestamp } from 'drizzle-orm/pg-core';
-
-export const gender = pgEnum('gender', ['male', 'female']);
+import { timestamp } from 'drizzle-orm/pg-core';
 
 export const timestamps = {
   updatedAt: timestamp().notNull().defaultNow().$onUpdate(() => new Date()),

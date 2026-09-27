@@ -1,9 +1,12 @@
 import { timestamps } from '@/database/utils';
-import { boolean, snakeCase, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, pgEnum, snakeCase, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+
+export const gender = pgEnum('gender', ['male', 'female']);
 
 export const users = snakeCase.table('users', {
   id: uuid().defaultRandom().primaryKey(),
   name: text().notNull(),
+  gender: gender(), 
   email: text().unique(),
   emailVerified: boolean().default(false).notNull(),
   phoneNumber: text().unique(),
