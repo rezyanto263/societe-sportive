@@ -4,6 +4,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import db from '@/database';
 import * as schema from '@/database/schema';
 import { nextCookies } from 'better-auth/next-js';
+import { ac, organizer, player } from './permission';
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL!,
@@ -25,7 +26,7 @@ export const auth = betterAuth({
   },
 
   plugins: [
-    admin(),
+    admin({ ac, roles: { player, organizer }, defaultRole: 'player' }),
 
     phoneNumber({
       sendOTP: async ({ phoneNumber, code }) => {

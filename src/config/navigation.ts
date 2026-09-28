@@ -1,3 +1,4 @@
+import { NavigationType } from '@/types/navigation';
 import {
   CreditCardIcon,
   LayoutDashboard,
@@ -8,7 +9,7 @@ import {
   Users2Icon,
 } from 'lucide-react';
 
-export const dashboardNavigation = [
+export const dashboardNavigation: NavigationType = [
   {
     title: 'MANAJEMEN',
     items: [
@@ -23,17 +24,20 @@ export const dashboardNavigation = [
         items: [
           {
             title: 'Semua Pertandingan',
-            href: '/dashboard/matches'
+            href: '/dashboard/matches',
+            permission: { matches: ['list'] },
           },
           {
             title: 'Buat Pertandingan',
-            href: '/dashboard/matches/create'
+            href: '/dashboard/matches/create',
+            permission: { matches: ['create'] },
           },
           {
             title: 'Pencarian Lawan',
-            href: '/dashboard/matches/matchmaking'
+            href: '/dashboard/matches/matchmaking',
+            permission: { matches: ['create-matchmaking'] },
           },
-        ]
+        ],
       },
       {
         title: 'Absensi QR',
@@ -41,19 +45,22 @@ export const dashboardNavigation = [
         icon: QrCodeIcon,
       },
       {
-        title: 'Lapangan',
-        href: '/dashboard/courts',
+        title: 'Tempat & Lapangan',
+        href: '/dashboard/venues',
         icon: MapPinnedIcon,
+        permission: { venues: ['list'] },
       },
       {
         title: 'Anggota',
         href: '/dashboard/members',
         icon: Users2Icon,
+        permission: { members: ['list'] },
       },
       {
         title: 'Rekening Pembayaran',
         href: '/dashboard/payment-accounts',
         icon: CreditCardIcon,
+        permission: { paymentAccounts: ['list'] },
       },
     ],
   },
