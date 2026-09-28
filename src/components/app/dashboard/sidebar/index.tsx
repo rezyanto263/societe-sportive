@@ -1,21 +1,26 @@
-'use client';
-
-import SidebarNavItem from '@/components/app/dashboard/sidebar/sidebar-nav-item';
+import SidebarNavGroup from '@/components/app/dashboard/sidebar/sidebar-nav-group';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboardNavigation } from '@/config/navigation';
+import getUser from '@/features/auth/actions/get-user';
+import { organizer, player } from '@/lib/permission';
 import Image from 'next/image';
 
-export default function DashboardSidebar() {
+export default async function DashboardSidebar() {
+  const user = await getUser();
+  const userPermissions =
+    user?.role === 'player'
+      ? player.statements
+      : user?.role === 'organizer'
+        ? organizer.statements
+        : undefined;
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b py-4">
@@ -50,20 +55,7 @@ export default function DashboardSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {dashboardNavigation.map((navGroup) => (
-          <SidebarGroup key={navGroup.title}>
-            <SidebarGroupLabel>{navGroup.title}</SidebarGroupLabel>
-
-            <SidebarMenu>
-              {navGroup.items.map((navItem) => (
-                <SidebarNavItem
-                  key={navItem.href ?? navItem.title}
-                  navItem={navItem}
-                />
-              ))}
-            </SidebarMenu>
-          </SidebarGroup>
-        ))}
+        <SidebarNavGroup userPermissions={userPermissions} />
       </SidebarContent>
 
       <SidebarFooter />

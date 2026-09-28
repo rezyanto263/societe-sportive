@@ -19,7 +19,7 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { dashboardNavigation } from '@/config/navigation';
+import { dashboardNavigation } from '@/config/navigations';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { ChevronRightIcon } from 'lucide-react';
