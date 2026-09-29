@@ -7,21 +7,11 @@ import {
   SidebarMenu,
 } from '@/components/ui/sidebar';
 import { dashboardNavigation } from '@/config/navigation';
-import { Permission } from '@/types/permission';
-import { filterDashboardNavigation } from '@/lib/utils';
 
-export default function SidebarNavGroup({
-  userPermissions,
-}: {
-  userPermissions?: Permission;
-}) {
-  const navigation = userPermissions
-    ? filterDashboardNavigation(dashboardNavigation, userPermissions)
-    : [];
-
+export default function SidebarNavGroup() {
   return (
     <>
-      {navigation.map((group) => (
+      {dashboardNavigation.map((group) => (
         <SidebarGroup key={group.title}>
           <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
 

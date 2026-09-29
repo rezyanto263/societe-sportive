@@ -8,19 +8,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import getUser from '@/features/auth/actions/get-user';
-import { organizer, player } from '@/lib/permission';
 import Image from 'next/image';
 
 export default async function DashboardSidebar() {
-  const user = await getUser();
-  const userPermissions =
-    user?.role === 'player'
-      ? player.statements
-      : user?.role === 'organizer'
-        ? organizer.statements
-        : undefined;
-
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b py-4">
@@ -55,7 +45,7 @@ export default async function DashboardSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarNavGroup userPermissions={userPermissions} />
+        <SidebarNavGroup />
       </SidebarContent>
 
       <SidebarFooter />
