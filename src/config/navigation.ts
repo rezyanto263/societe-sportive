@@ -25,17 +25,14 @@ export const dashboardNavigation: NavigationType = [
           {
             title: 'Semua Pertandingan',
             href: '/dashboard/matches',
-            permission: { matches: ['list'] },
           },
           {
             title: 'Buat Pertandingan',
             href: '/dashboard/matches/create',
-            permission: { matches: ['create'] },
           },
           {
             title: 'Pencarian Lawan',
             href: '/dashboard/matches/matchmaking',
-            permission: { matches: ['create-matchmaking'] },
           },
         ],
       },
@@ -48,19 +45,16 @@ export const dashboardNavigation: NavigationType = [
         title: 'Tempat & Lapangan',
         href: '/dashboard/venues',
         icon: MapPinnedIcon,
-        permission: { venues: ['list'] },
       },
       {
         title: 'Anggota',
         href: '/dashboard/members',
         icon: Users2Icon,
-        permission: { members: ['list'] },
       },
       {
         title: 'Rekening Pembayaran',
         href: '/dashboard/payment-accounts',
         icon: CreditCardIcon,
-        permission: { paymentAccounts: ['list'] },
       },
     ],
   },
