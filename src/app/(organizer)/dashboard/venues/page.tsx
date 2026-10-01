@@ -1,9 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { MapPinnedIcon, PlusCircleIcon, RefreshCwIcon } from 'lucide-react';
-import Link from 'next/link';
+import { getSports } from '@/features/matches/actions/get-sports';
+import CreateVenueDialog from '@/features/venues/components/create-dialog';
+import { MapPinnedIcon, RefreshCwIcon } from 'lucide-react';
 
-export default function ListVenuePage() {
+export default async function ListVenuePage() {
+  const sports = await getSports();
+
   return (
     <div className="p-6 space-y-8">
       <Card className="p-6 flex-row justify-between max-lg:flex-col">
@@ -24,11 +27,7 @@ export default function ListVenuePage() {
             <RefreshCwIcon />
           </Button>
 
-          <Link href="/dashboard/venues/create">
-            <Button className="cursor-pointer">
-              <PlusCircleIcon /> Tambah Lapangan
-            </Button>
-          </Link>
+          <CreateVenueDialog sports={sports} />
         </div>
       </Card>
     </div>
