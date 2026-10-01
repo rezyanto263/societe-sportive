@@ -1,4 +1,4 @@
-import { venues } from '@/database/schema/courts/venues';
+import { venues } from '@/database/schema/venues/venues';
 import { timestamps } from '@/database/utils';
 import { snakeCase, text, uuid } from 'drizzle-orm/pg-core';
 

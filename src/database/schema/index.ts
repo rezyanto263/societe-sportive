@@ -11,8 +11,8 @@ export * from './matches/match-courts';
 export * from './matches/match-payment-accounts';
 
 // COURTS SCHEMA
-export * from './courts/venues';
-export * from './courts/courts';
+export * from './venues/venues';
+export * from './venues/courts';
 
 // PAYMENTS SCHEMA
 export * from './payments/payment-accounts';

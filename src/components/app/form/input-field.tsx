@@ -1,5 +1,8 @@
+import { CurrencyInput } from '@/components/app/form/currency-input';
 import { PhoneInput } from '@/components/app/form/phone-input';
+import { RichTextInput } from '@/components/app/form/rich-text-input';
 import SecretInput from '@/components/app/form/secret-input';
+import { TagsInput } from '@/components/app/form/tags-input';
 import {
   Field,
   FieldContent,
@@ -18,14 +21,22 @@ import {
   FieldValues,
 } from 'react-hook-form';
 
+type Render<T extends FieldValues, N extends FieldPath<T>> = (props: {
+  field: ControllerRenderProps<T, N>;
+  fieldState: ControllerFieldState;
+  type?: HTMLInputElement['type'];
+  secret?: boolean;
+}) => React.ReactNode;
+
 type InputFieldProps<T extends FieldValues, N extends FieldPath<T>> = {
   field: ControllerRenderProps<T, N>;
   fieldState: ControllerFieldState;
   label: string;
-  description?: string;
+  description?: string | React.ReactNode;
   type?: HTMLInputElement['type'];
   required?: boolean;
   secret?: boolean;
+  render?: Render<T, N>;
 };
 
 export default function InputField<
@@ -39,6 +50,7 @@ export default function InputField<
   description,
   required = false,
   secret = false,
+  render,
 }: InputFieldProps<T, N>) {
   return (
     <Field data-invalid={fieldState.invalid}>
@@ -46,12 +58,16 @@ export default function InputField<
         {label} {required && <span className="text-destructive">*</span>}
       </FieldLabel>
 
-      <InputComponent
-        field={field}
-        fieldState={fieldState}
-        secret={secret}
-        type={type}
-      />
+      {render ? (
+        render({ field, fieldState, secret, type })
+      ) : (
+        <InputComponent
+          field={field}
+          fieldState={fieldState}
+          secret={secret}
+          type={type}
+        />
+      )}
 
       {fieldState.invalid && (
         <div className="flex items-center gap-2">
@@ -132,5 +148,23 @@ function InputComponent<T extends FieldValues, N extends FieldPath<T>>({
         </FieldLabel>
       </RadioGroup>
     );
+  } else if (type === 'currency') {
+    return (
+      <CurrencyInput
+        {...field}
+        aria-invalid={fieldState.invalid}
+        currency="IDR"
+        locale="id-ID"
+        fractionDigits={2}
+      />
+    );
+  } else if (type === 'tags') {
+    return (
+      <TagsInput {...field} aria-invalid={fieldState.invalid} />
+    )
+  } else if (type === 'richtext') {
+    return (
+      <RichTextInput {...field} aria-invalid={fieldState.invalid} />
+    )
   }
 }

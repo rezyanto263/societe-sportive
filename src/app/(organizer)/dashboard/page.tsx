@@ -23,7 +23,6 @@ import {
   ArrowRight,
   CalendarClockIcon,
   ChevronRight,
-  CreditCardCheck,
   CreditCardIcon,
   MapPinIcon,
   PlusCircleIcon,
@@ -65,7 +64,7 @@ export default function DashboardPage() {
             Buat Pertandingan
           </Button>
           <Button variant="secondary" className="cursor-pointer">
-            <CreditCardCheck />
+            <CreditCardIcon />
             Verifikasi Pembayaran
           </Button>
         </div>

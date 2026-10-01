@@ -1,4 +1,4 @@
-import { courts } from '@/database/schema/courts/courts';
+import { courts } from '@/database/schema/venues/courts';
 import { matches } from '@/database/schema/matches/matches';
 import { snakeCase, uuid } from 'drizzle-orm/pg-core';
 
