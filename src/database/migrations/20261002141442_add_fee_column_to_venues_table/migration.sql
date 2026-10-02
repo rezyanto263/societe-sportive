@@ -1,0 +1,1 @@
+ALTER TABLE "venues" ADD COLUMN "fee" numeric(12,2) NOT NULL;

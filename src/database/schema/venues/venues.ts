@@ -1,6 +1,6 @@
 import { sports } from '@/database/schema/matches/sports';
 import { timestamps } from '@/database/utils';
-import { snakeCase, text, uuid } from 'drizzle-orm/pg-core';
+import { numeric, snakeCase, text, uuid } from 'drizzle-orm/pg-core';
 
 export const venues = snakeCase.table('venues', {
   id: uuid().defaultRandom().primaryKey(),
@@ -13,5 +13,6 @@ export const venues = snakeCase.table('venues', {
   address: text().notNull(),
   facilities: text().array(),
   notes: text(),
+  fee: numeric({ precision: 12, scale: 2 }).notNull(),
   ...timestamps,
 });
