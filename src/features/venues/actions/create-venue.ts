@@ -23,7 +23,7 @@ export async function createVenue({
     return db.transaction(async (tx) => {
       const [venue] = await tx
         .insert(venues)
-        .values({ ...venueData })
+        .values({ ...venueData, fee: venueData.fee.toString() })
         .returning({
           id: venues.id,
         });
