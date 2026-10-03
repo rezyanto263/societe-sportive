@@ -10,18 +10,16 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const sidebarState = cookieStore.get("sidebar_state");
+  const sidebarState = cookieStore.get('sidebar_state');
 
-  const defaultOpen = sidebarState?.value !== "false";
+  const defaultOpen = sidebarState?.value !== 'false';
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <DashboardSidebar />
-      <main className="flex flex-col overflow-hidden h-screen w-full">
+      <main className="flex flex-col w-full flex-1 min-h-0 overflow-hidden">
         <DashboardHeader />
-        <ScrollArea className="overflow-y-auto h-screen">
-          {children}
-        </ScrollArea>
+        <ScrollArea className="flex-1 min-h-0">{children}</ScrollArea>
       </main>
     </SidebarProvider>
   );
