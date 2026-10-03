@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/card';
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
@@ -29,7 +28,6 @@ import {
   Item,
   ItemActions,
   ItemContent,
-  ItemDescription,
   ItemTitle,
 } from '@/components/ui/item';
 import { Separator } from '@/components/ui/separator';
@@ -40,6 +38,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Sport } from '@/constants/sports';
+import UpdateVenueDialog from '@/features/venues/components/update-dialog';
 import { Sports } from '@/types/sport';
 import { Venues } from '@/types/venues';
 import {
@@ -50,7 +49,6 @@ import {
   ExternalLinkIcon,
   InfoIcon,
   MapPinIcon,
-  MapPinOffIcon,
   PhoneIcon,
   SearchIcon,
   Trash2Icon,
@@ -98,7 +96,11 @@ export default function ListVenues({ venues, sports }: ListVenuesProps) {
 
           <ToggleGroup
             value={[selectedSport]}
-            onValueChange={(value) => setSelectedSport(value[0])}
+            onValueChange={(value) => {
+              if (value.length > 0) {
+                setSelectedSport(value[0]);
+              }
+            }}
             size="sm"
             className="max-md:flex-wrap"
           >
@@ -127,7 +129,7 @@ export default function ListVenues({ venues, sports }: ListVenuesProps) {
         <div className="grid lg:grid-cols-2 gap-6">
           {filteredVenues.map((venue) => (
             <Card key={venue.id}>
-              <CardHeader className="flex-1">
+              <CardHeader>
                 <div className="flex items-center justify-between gap-3">
                   <Badge variant="outline" className="capitalize">
                     <SportIcon
@@ -138,13 +140,19 @@ export default function ListVenues({ venues, sports }: ListVenuesProps) {
                   </Badge>
 
                   <div className="flex items-center gap-3">
-                    <Button
-                      size="icon-xs"
-                      variant="secondary"
-                      className="cursor-pointer"
-                    >
-                      <Edit2Icon />
-                    </Button>
+                    <UpdateVenueDialog
+                      venue={venue}
+                      sports={sports}
+                      renderTrigger={
+                        <Button
+                          size="icon-xs"
+                          variant="secondary"
+                          className="cursor-pointer"
+                        >
+                          <Edit2Icon />
+                        </Button>
+                      }
+                    />
                     <Button
                       size="icon-xs"
                       variant="destructive"
@@ -208,7 +216,7 @@ export default function ListVenues({ venues, sports }: ListVenuesProps) {
                   )}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="bg-accent py-6 space-y-3">
+              <CardContent className="bg-accent py-6 space-y-3 mt-auto">
                 <span className="font-bold flex items-center gap-2">
                   Daftar Lapangan Tersedia{' '}
                   <span className="rounded-full size-4 bg-primary text-primary-foreground flex items-center justify-center text-xs">
@@ -237,18 +245,18 @@ export default function ListVenues({ venues, sports }: ListVenuesProps) {
                                 }
                               />
                               <TooltipContent className="flex-col items-start gap-2 py-3">
-                                <span className="font-bold">Spesifikasi Lapangan:</span>
+                                <span className="font-bold">
+                                  Spesifikasi Lapangan:
+                                </span>
                                 <div className="flex flex-wrap gap-2">
-                                {court.specifications?.map(
-                                  (specification, index) => (
-                                    <Badge
-                                      key={index}
-                                    >
-                                      <CheckIcon />
-                                      {specification}
-                                    </Badge>
-                                  ),
-                                )}
+                                  {court.specifications?.map(
+                                    (specification, index) => (
+                                      <Badge key={index}>
+                                        <CheckIcon />
+                                        {specification}
+                                      </Badge>
+                                    ),
+                                  )}
                                 </div>
                               </TooltipContent>
                             </Tooltip>
