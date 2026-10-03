@@ -23,6 +23,11 @@ export const relations = defineRelations(schema, (r) => ({
 
   venues: {
     courts: r.many.courts(),
+    sport: r.one.sports({
+      from: r.venues.sportId,
+      to: r.sports.id,
+      optional: false,
+    }),
   },
 
   courts: {
@@ -47,6 +52,7 @@ export const relations = defineRelations(schema, (r) => ({
 
   sports: {
     matches: r.many.matches(),
+    venues: r.many.venues(),
   },
 
   matches: {
