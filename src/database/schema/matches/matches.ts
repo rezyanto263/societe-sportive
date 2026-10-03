@@ -1,6 +1,6 @@
 import { sports } from '@/database/schema/matches/sports';
 import { venues } from '@/database/schema/venues/venues';
-import { timestamps } from '@/database/utils';
+import { softDelete, timestamps } from '@/database/utils';
 import {
   date,
   numeric,
@@ -23,5 +23,6 @@ export const matches = snakeCase.table('matches', {
   venueId: uuid()
     .notNull()
     .references(() => venues.id),
+  ...softDelete,
   ...timestamps,
 });
