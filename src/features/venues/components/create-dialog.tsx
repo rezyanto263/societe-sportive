@@ -26,7 +26,6 @@ import { Sports } from '@/types/sport';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   AlertCircleIcon,
-  MapPinnedIcon,
   PlusCircleIcon,
   Trash2Icon,
   XIcon,
@@ -39,10 +38,13 @@ import { createVenue } from '@/features/venues/actions/create-venue';
 import { toast } from 'sonner';
 import { useState, useTransition } from 'react';
 import { Spinner } from '@/components/ui/spinner';
+import CourtIcon from '@/components/app/icon/court';
+import { useRouter } from 'next/navigation';
 
 export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
   const [open, setOpen] = useState(false);
   const [isLoading, startTransition] = useTransition();
+  const router = useRouter();
 
   const defaultValues = {
     sportId: sports[0].id,
@@ -77,6 +79,7 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
       setOpen(false);
       form.reset(defaultValues);
       toast.success(message);
+      router.refresh();
     });
   }
 
@@ -248,7 +251,7 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
                   <div className="flex items-center justify-between flex-wrap gap-3">
                     <div className="space-y-3">
                       <span className="font-semibold flex items-center gap-3 text-base">
-                        <MapPinnedIcon className="size-5 shrink-0" /> Daftar
+                        <CourtIcon className="size-7 shrink-0" /> Daftar
                         Lapangan Tersedia ({fields.length})
                       </span>
                       {form.formState.errors.courts?.message && (
