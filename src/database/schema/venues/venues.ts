@@ -1,5 +1,5 @@
 import { sports } from '@/database/schema/matches/sports';
-import { timestamps } from '@/database/utils';
+import { softDelete, timestamps } from '@/database/utils';
 import { numeric, snakeCase, text, uuid } from 'drizzle-orm/pg-core';
 
 export const venues = snakeCase.table('venues', {
@@ -14,5 +14,6 @@ export const venues = snakeCase.table('venues', {
   facilities: text().array(),
   notes: text(),
   fee: numeric({ precision: 12, scale: 2 }).notNull(),
+  ...softDelete,
   ...timestamps,
 });

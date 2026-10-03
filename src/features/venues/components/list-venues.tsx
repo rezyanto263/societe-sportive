@@ -38,6 +38,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Sport } from '@/constants/sports';
+import DeleteVenueDialog from '@/features/venues/components/delete-dialog';
 import UpdateVenueDialog from '@/features/venues/components/update-dialog';
 import { Sports } from '@/types/sport';
 import { Venues } from '@/types/venues';
@@ -153,13 +154,19 @@ export default function ListVenues({ venues, sports }: ListVenuesProps) {
                         </Button>
                       }
                     />
-                    <Button
-                      size="icon-xs"
-                      variant="destructive"
-                      className="cursor-pointer"
-                    >
-                      <Trash2Icon />
-                    </Button>
+                    <DeleteVenueDialog
+                      id={venue.id}
+                      name={venue.name}
+                      renderTrigger={
+                        <Button
+                          size="icon-xs"
+                          variant="destructive"
+                          className="cursor-pointer"
+                        >
+                          <Trash2Icon />
+                        </Button>
+                      }
+                    />
                   </div>
                 </div>
                 <CardTitle className="font-bold">{venue.name}</CardTitle>

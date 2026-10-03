@@ -1,4 +1,4 @@
-import { timestamps } from '@/database/utils';
+import { softDelete, timestamps } from '@/database/utils';
 import { boolean, pgEnum, snakeCase, text, uuid } from 'drizzle-orm/pg-core';
 
 export const paymentAccountTypes = pgEnum('payment_account_types', [
@@ -16,5 +16,6 @@ export const paymentAccounts = snakeCase.table('payment_accounts', {
   accountHolderName: text().notNull(),
   imageUrl: text(),
   bookmark: boolean().default(false),
+  ...softDelete,
   ...timestamps,
 });

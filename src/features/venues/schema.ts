@@ -27,12 +27,17 @@ export class VenuesSchema {
               : 'Harga sewa harus berupa angka.',
         })
         .min(0, 'Harga sewa tidak boleh negatif.'),
-      courts: z.array(
-        z.object({
-          name: z.string().max(100, 'Nama Lapangan maksimal 100 karakter.').nonempty('Nama lapangan harus diisi.'),
-          specifications: z.array(z.string()).nullable(),
-        }),
-      ).min(1, 'Minimal 1 lapangan yang tersedia.'),
+      courts: z
+        .array(
+          z.object({
+            name: z
+              .string()
+              .max(100, 'Nama Lapangan maksimal 100 karakter.')
+              .nonempty('Nama lapangan harus diisi.'),
+            specifications: z.array(z.string()).nullable(),
+          }),
+        )
+        .min(1, 'Minimal 1 lapangan yang tersedia.'),
     })
     .refine((data) => isValidPhoneNumber(data.phoneNumber), {
       message: 'Nomor ponsel tidak valid.',
@@ -40,13 +45,26 @@ export class VenuesSchema {
     });
 
   static update = VenuesSchema.create.safeExtend({
-    id: z.uuid('ID tempat tidak valid.').nonempty('ID tempat harus diisi.'),
-    courts: z.array(
+    id: z.uuid('ID tidak valid.').nonempty('ID tempat harus diisi.'),
+    courts: z
+      .array(
         z.object({
-          id: z.uuid().nullable(),
-          name: z.string().max(100, 'Nama Lapangan maksimal 100 karakter.').nonempty('Nama lapangan harus diisi.'),
+          id: z.uuid('ID tidak valid.').nullable(),
+          name: z
+            .string()
+            .max(100, 'Nama Lapangan maksimal 100 karakter.')
+            .nonempty('Nama lapangan harus diisi.'),
           specifications: z.array(z.string()).nullable(),
         }),
-      ).min(1, 'Minimal 1 lapangan yang tersedia.')
+      )
+      .min(1, 'Minimal 1 lapangan yang tersedia.'),
+  });
+
+  static delete = z.object({
+    id: z.uuid('ID tidak valid.'),
+    name: z
+      .string()
+      .max(100, 'Konfirmasi nama lapangan maksimal 100 karakter.')
+      .nonempty('Konfirmasi nama lapangan harus diisi.'),
   });
 }

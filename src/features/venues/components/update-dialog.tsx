@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/field';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { VenuesSchema } from '@/features/venues/schema';
-import { CreateVenueData, UpdateVenueData } from '@/features/venues/types';
+import { UpdateVenueData } from '@/features/venues/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   AlertCircleIcon,
@@ -35,7 +35,6 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { Sport } from '@/constants/sports';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Kbd } from '@/components/ui/kbd';
-import { createVenue } from '@/features/venues/actions/create-venue';
 import { toast } from 'sonner';
 import { JSX, useState, useTransition } from 'react';
 import { Spinner } from '@/components/ui/spinner';

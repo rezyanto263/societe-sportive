@@ -67,7 +67,22 @@ export async function updateVenue({
         .filter((id) => !submittedCourtIds.has(id));
 
       for (const courtId of deletedCourtIds) {
-        await tx.delete(courts).where(eq(courts.id, courtId));
+        const usage = await tx.query.matchCourts.findFirst({
+          where: { courtId: courtId },
+        });
+
+        if (!!usage) {
+          // Sudah pernah digunakan → soft delete
+          await tx
+            .update(courts)
+            .set({
+              deletedAt: new Date(),
+            })
+            .where(eq(courts.id, courtId));
+        } else {
+          // Belum pernah digunakan → hard delete
+          await tx.delete(courts).where(eq(courts.id, courtId));
+        }
       }
 
       return {
