@@ -19,9 +19,8 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { dashboardNavigation } from '@/config/navigations';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { NavigationItemType } from '@/types/navigation';
 import { ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -30,12 +29,11 @@ import { useEffect, useState } from 'react';
 export default function SidebarNavItem({
   navItem,
 }: {
-  navItem: (typeof dashboardNavigation)[number]['items'][number];
+  navItem: NavigationItemType;
 }) {
   const pathname = usePathname();
-  const { state } = useSidebar();
+  const { isMobile, state, setOpenMobile } = useSidebar();
   const [isCollapsed, setIsCollapsed] = useState(state === 'collapsed');
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -50,11 +48,17 @@ export default function SidebarNavItem({
     navItem.items?.some((subItem) => pathname === subItem.href) ?? false;
   const [open, setOpen] = useState(isSubItemActive);
 
+  function handleSidebarMobile() {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }
+
   if (!hasSubItems) {
     return (
       <SidebarMenuItem>
         <SidebarMenuButton
-          render={<Link href={navItem.href!} />}
+          render={<Link href={navItem.href!} onClick={handleSidebarMobile} />}
           isActive={pathname === navItem.href}
           tooltip={navItem.title}
         >
@@ -90,7 +94,9 @@ export default function SidebarNavItem({
                   'bg-accent! text-accent-foreground!',
               )}
               key={subItem.href}
-              render={<Link href={subItem.href} />}
+              render={
+                <Link href={subItem.href} onClick={handleSidebarMobile} />
+              }
             >
               {subItem.title}
             </DropdownMenuItem>
@@ -123,7 +129,9 @@ export default function SidebarNavItem({
           {navItem.items!.map((subItem) => (
             <SidebarMenuSubItem key={subItem.href}>
               <SidebarMenuSubButton
-                render={<Link href={subItem.href} />}
+                render={
+                  <Link href={subItem.href} onClick={handleSidebarMobile} />
+                }
                 isActive={pathname === subItem.href}
               >
                 <span>{subItem.title}</span>

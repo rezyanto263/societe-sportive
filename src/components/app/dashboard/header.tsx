@@ -28,7 +28,7 @@ export default function DashboardHeader() {
   }
 
   return (
-    <header className="flex items-center justify-between border-b p-3 bg-sidebar sticky top-0">
+    <header className="flex items-center justify-between border-b p-3 bg-sidebar sticky top-0 shrink-0">
       <SidebarTrigger className="cursor-pointer" size="icon-lg" />
 
       <div className="flex items-center gap-3">

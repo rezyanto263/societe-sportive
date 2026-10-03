@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import "@/components/editor/style.css";
+import '@/components/editor/style.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 import { UserProvider } from '@/components/providers/user-provider';
@@ -25,10 +25,10 @@ export default async function RootLayout({
   return (
     <html
       lang="id"
-      className={cn('h-full', 'antialiased', inter.variable)}
+      className={cn('min-h-svh max-h-svh', 'antialiased', inter.variable)}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-svh max-h-svh flex flex-col overflow-hidden">
         <UserProvider user={user}>
           <ThemeProvider>
             <TooltipProvider>
