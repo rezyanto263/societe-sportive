@@ -39,10 +39,12 @@ import { toast } from 'sonner';
 import { useState, useTransition } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import CourtIcon from '@/components/app/icon/court';
+import { useRouter } from 'next/navigation';
 
 export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
   const [open, setOpen] = useState(false);
   const [isLoading, startTransition] = useTransition();
+  const router = useRouter();
 
   const defaultValues = {
     sportId: sports[0].id,
@@ -77,6 +79,7 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
       setOpen(false);
       form.reset(defaultValues);
       toast.success(message);
+      router.refresh();
     });
   }
 
