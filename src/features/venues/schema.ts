@@ -38,4 +38,15 @@ export class VenuesSchema {
       message: 'Nomor ponsel tidak valid.',
       path: ['phoneNumber'],
     });
+
+  static update = VenuesSchema.create.safeExtend({
+    id: z.uuid('ID tempat tidak valid.').nonempty('ID tempat harus diisi.'),
+    courts: z.array(
+        z.object({
+          id: z.uuid().nullable(),
+          name: z.string().max(100, 'Nama Lapangan maksimal 100 karakter.').nonempty('Nama lapangan harus diisi.'),
+          specifications: z.array(z.string()).nullable(),
+        }),
+      ).min(1, 'Minimal 1 lapangan yang tersedia.')
+  });
 }
