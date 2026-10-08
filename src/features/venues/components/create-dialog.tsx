@@ -22,7 +22,7 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { VenuesSchema } from '@/features/venues/schema';
 import { CreateVenueData } from '@/features/venues/types';
-import { Sports } from '@/types/sport'; 
+import { Sports } from '@/database/types'; 
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   AlertCircleIcon,
