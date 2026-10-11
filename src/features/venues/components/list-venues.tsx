@@ -40,8 +40,7 @@ import {
 import { Sport } from '@/constants/sports';
 import DeleteVenueDialog from '@/features/venues/components/delete-dialog';
 import UpdateVenueDialog from '@/features/venues/components/update-dialog';
-import { Sports } from '@/types/sport';
-import { Venues } from '@/types/venues';
+import { Sports, Venues } from '@/database/types';
 import {
   BanknoteIcon,
   CheckIcon,
@@ -56,6 +55,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { formatToRupiah } from '@/lib/utils';
 
 type ListVenuesProps = {
   venues: Venues[];
@@ -183,13 +183,7 @@ export default function ListVenues({ venues, sports }: ListVenuesProps) {
                       </span>
                       <span className="flex items-start gap-1 text-xs!">
                         <BanknoteIcon className="shrink-0 size-3.5" />{' '}
-                        {new Intl.NumberFormat('id-ID', {
-                          style: 'currency',
-                          currency: 'IDR',
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }).format(Number(venue.fee))}{' '}
-                        / jam
+                        {formatToRupiah(Number(venue.fee))} / jam
                       </span>
                     </div>
                     <Link

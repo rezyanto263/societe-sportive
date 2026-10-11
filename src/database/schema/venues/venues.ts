@@ -11,7 +11,7 @@ export const venues = snakeCase.table('venues', {
   phoneNumber: text().notNull(),
   googleMapsUrl: text().notNull(),
   address: text().notNull(),
-  facilities: text().array(),
+  facilities: text().array().notNull(),
   notes: text(),
   fee: numeric({ precision: 12, scale: 2 }).notNull(),
   ...softDelete,

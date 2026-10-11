@@ -40,8 +40,7 @@ import { JSX, useState, useTransition } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import CourtIcon from '@/components/app/icon/court';
 import { useRouter } from 'next/navigation';
-import { Venues } from '@/types/venues';
-import { Sports } from '@/types/sport';
+import { Sports, Venues } from '@/database/types';
 import { updateVenue } from '@/features/venues/actions/update-venue';
 
 export default function UpdateVenueDialog({
