@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
+    "@fancyapps/ui": "^6.1.15",
     "@hookform/resolvers": "^5.9.1",
+    "@tailwindcss/typography": "^0.5.20",
     "@tiptap/core": "^3.31.3",
     "@tiptap/extension-character-count": "^3.31.3",
     "@tiptap/extension-code-block-lowlight": "^3.31.3",

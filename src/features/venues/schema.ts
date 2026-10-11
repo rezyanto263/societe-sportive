@@ -17,7 +17,9 @@ export class VenuesSchema {
         .string()
         .max(200, 'Alamat maksimal 200 karakter.')
         .nonempty('Alamat harus diisi.'),
-      facilities: z.array(z.string()),
+      facilities: z
+        .array(z.string())
+        .min(1, 'Minimal 1 fasilitas yang tersedia.'),
       notes: z.string().max(2000, 'Catatan maksimal 2000 karakter.').nullable(),
       fee: z
         .number({
@@ -34,7 +36,9 @@ export class VenuesSchema {
               .string()
               .max(100, 'Nama Lapangan maksimal 100 karakter.')
               .nonempty('Nama lapangan harus diisi.'),
-            specifications: z.array(z.string()).nullable(),
+            specifications: z
+              .array(z.string())
+              .min(1, 'Minimal 1 spesifikasi yang tersedia.'),
           }),
         )
         .min(1, 'Minimal 1 lapangan yang tersedia.'),
@@ -54,17 +58,32 @@ export class VenuesSchema {
             .string()
             .max(100, 'Nama Lapangan maksimal 100 karakter.')
             .nonempty('Nama lapangan harus diisi.'),
-          specifications: z.array(z.string()).nullable(),
+          specifications: z.array(z.string()),
         }),
       )
       .min(1, 'Minimal 1 lapangan yang tersedia.'),
   });
 
   static delete = z.object({
-    id: z.uuid('ID tidak valid.'),
+    id: z.uuid('ID tidak valid.').nonempty('ID harus diisi.'),
     name: z
       .string()
       .max(100, 'Konfirmasi nama lapangan maksimal 100 karakter.')
       .nonempty('Konfirmasi nama lapangan harus diisi.'),
+  });
+
+  static deleteCourt = VenuesSchema.delete;
+
+  static createCourt = z.object({
+    venueId: z
+      .uuid('ID tempat tidak valid.')
+      .nonempty('ID tempat harus diisi.'),
+    name: z
+      .string()
+      .max(100, 'Nama Lapangan maksimal 100 karakter.')
+      .nonempty('Nama lapangan harus diisi.'),
+    specifications: z
+      .array(z.string())
+      .min(1, 'Minimal 1 spesifikasi yang tersedia.'),
   });
 }

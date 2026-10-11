@@ -316,6 +316,7 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
                                 </>
                               }
                               type="tags"
+                              required
                             />
                           )}
                         />
@@ -352,6 +353,7 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
                         </>
                       }
                       type="tags"
+                      required
                     />
                   )}
                 />
