@@ -17,10 +17,12 @@ export default async function DashboardLayout({
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <DashboardSidebar />
-      <main className="flex flex-col w-full flex-1 min-h-0 overflow-hidden">
+      <div className="flex flex-col w-full flex-1 min-h-0 overflow-hidden">
         <DashboardHeader />
-        <ScrollArea className="flex-1 min-h-0">{children}</ScrollArea>
-      </main>
+        <ScrollArea className="flex-1 min-h-0">
+          <main className="w-full max-w-340 mx-auto">{children}</main>
+        </ScrollArea>
+      </div>
     </SidebarProvider>
   );
 }
