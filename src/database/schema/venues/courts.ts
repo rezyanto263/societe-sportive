@@ -8,7 +8,7 @@ export const courts = snakeCase.table('courts', {
     .notNull()
     .references(() => venues.id, { onDelete: 'cascade' }),
   name: text().notNull(),
-  specifications: text().array(),
+  specifications: text().array().notNull(),
   ...softDelete,
   ...timestamps,
 });
