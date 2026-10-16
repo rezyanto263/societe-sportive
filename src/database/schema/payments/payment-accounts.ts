@@ -1,3 +1,4 @@
+import { medias } from '@/database/schema/medias/medias';
 import { softDelete, timestamps } from '@/database/utils';
 import { boolean, pgEnum, snakeCase, text, uuid } from 'drizzle-orm/pg-core';
 
@@ -14,7 +15,7 @@ export const paymentAccounts = snakeCase.table('payment_accounts', {
   providerName: text().notNull(),
   accountNumber: text(),
   accountHolderName: text().notNull(),
-  imageUrl: text(),
+  imageId: uuid().references(() => medias.id, { onDelete: 'set null' }),
   bookmark: boolean().default(false),
   ...softDelete,
   ...timestamps,

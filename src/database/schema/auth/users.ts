@@ -1,20 +1,29 @@
+import { medias } from '@/database/schema/medias/medias';
 import { timestamps } from '@/database/utils';
-import { boolean, pgEnum, snakeCase, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  pgEnum,
+  snakeCase,
+  text,
+  timestamp,
+  uuid,
+} from 'drizzle-orm/pg-core';
 
 export const gender = pgEnum('gender', ['male', 'female']);
 
 export const users = snakeCase.table('users', {
   id: uuid().defaultRandom().primaryKey(),
+  avatarId: uuid().references(() => medias.id, { onDelete: 'set null' }),
   name: text().notNull(),
-  gender: gender(), 
+  gender: gender(),
   email: text().unique(),
   emailVerified: boolean().default(false).notNull(),
   phoneNumber: text().unique(),
   phoneNumberVerified: boolean().default(false).notNull(),
   image: text(),
   role: text(),
-	banned: boolean(),
-	banReason: text(),
-	banExpires: timestamp({ precision: 6, withTimezone: true }),
+  banned: boolean(),
+  banReason: text(),
+  banExpires: timestamp({ precision: 6, withTimezone: true }),
   ...timestamps,
 });

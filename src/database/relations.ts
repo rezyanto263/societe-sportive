@@ -28,9 +28,22 @@ export const relations = defineRelations(schema, (r) => ({
       to: r.sports.id,
       optional: false,
     }),
+    thumbnail: r.one.medias({
+      from: r.venues.thumbnailId,
+      to: r.medias.id,
+      optional: false,
+    }),
+    medias: r.many.medias({
+      from: r.venues.id.through(r.venueMedias.venueId),
+      to: r.medias.id.through(r.venueMedias.mediaId),
+    }),
   },
 
   courts: {
+    thumbnail: r.one.medias({
+      from: r.courts.thumbnailId,
+      to: r.medias.id,
+    }),
     venue: r.one.venues({
       from: r.courts.venueId,
       to: r.venues.id,
