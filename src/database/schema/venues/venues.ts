@@ -1,4 +1,5 @@
 import { sports } from '@/database/schema/matches/sports';
+import { medias } from '@/database/schema/medias/medias';
 import { softDelete, timestamps } from '@/database/utils';
 import { numeric, snakeCase, text, uuid } from 'drizzle-orm/pg-core';
 
@@ -7,6 +8,9 @@ export const venues = snakeCase.table('venues', {
   sportId: uuid()
     .notNull()
     .references(() => sports.id, { onDelete: 'cascade' }),
+  thumbnailId: uuid()
+    .notNull()
+    .references(() => medias.id, { onDelete: 'cascade' }),
   name: text().notNull(),
   phoneNumber: text().notNull(),
   googleMapsUrl: text().notNull(),
