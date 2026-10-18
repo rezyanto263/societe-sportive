@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   FileUpload,
@@ -13,10 +14,16 @@ import {
   FileUploadProps,
   FileUploadTrigger,
 } from '@/components/ui/file-upload';
+import {
+  Progress,
+  ProgressLabel,
+  ProgressValue,
+} from '@/components/ui/progress';
 import { Medias } from '@/database/types';
 import { cleanupPendingMedia } from '@/features/medias/actions/cleanup-pending-media';
 import { createMedia } from '@/features/medias/actions/create-media';
 import { uploadImageToCloudinary } from '@/features/medias/services/upload-image';
+import { getImageMimeType } from '@/lib/utils';
 import { UploadIcon, XIcon } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -25,6 +32,7 @@ type ImageInputProps = Omit<FileUploadProps, 'value'> & {
   value?: string | string[];
   onChange?: (value: string | string[]) => void;
   dropzone?: boolean;
+  initialImages?: (Medias | null | undefined)[];
 };
 
 export default function ImageInput({
@@ -34,10 +42,73 @@ export default function ImageInput({
   maxSize = 1 * 1024 * 1024,
   accept = '.png,.jpg,.jpeg',
   dropzone = false,
+  initialImages,
   ...props
 }: ImageInputProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [uploadedMedias, setUploadedMedias] = useState(new Map<File, Medias>());
+  const [initialFiles, setInitialFiles] = useState(new Map<File, Medias>());
+
+  useEffect(() => {
+    const validImages = (initialImages ?? []).filter(
+      (media): media is Medias => media != null && media.deletedAt === null,
+    );
+
+    if (validImages.length === 0) return;
+
+    let ignore = false;
+
+    const load = async () => {
+      const results = await Promise.all(
+        validImages
+          .filter(
+            (media) =>
+              media.resourceType === 'image' &&
+              getImageMimeType(media.url) !== undefined,
+          )
+          .slice(0, maxFiles)
+          .map(async (media) => {
+            try {
+              const res = await fetch(media.url);
+              if (!res.ok) return null;
+
+              const blob = await res.blob();
+              const name = media.url.split('?')[0].split('/').pop() ?? media.id;
+
+              return {
+                media,
+                file: new File([blob], name, {
+                  type: getImageMimeType(media.url),
+                }),
+              };
+            } catch {
+              return null;
+            }
+          }),
+      );
+
+      if (ignore) return;
+
+      const loaded = results.filter((item) => item !== null);
+      if (loaded.length === 0) return;
+
+      setFiles((previous) => [...loaded.map((item) => item.file), ...previous]);
+      setUploadedMedias((previous) => {
+        const next = new Map(previous);
+        loaded.forEach(({ file, media }) => next.set(file, media));
+        return next;
+      });
+      setInitialFiles(new Map(loaded.map(({ file, media }) => [file, media])));
+    };
+
+    load();
+
+    return () => {
+      ignore = true;
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const cancelledFiles = useRef(new WeakSet<File>());
   const abortControllers = useRef(new Map<File, AbortController>());
@@ -129,7 +200,12 @@ export default function ImageInput({
         const media = uploadedMedias.get(file);
 
         if (media) {
-          await cleanupPendingMedia(media.id);
+          const isInitial = initialFiles.has(file);
+
+          if (!isInitial && media.status === 'pending') {
+            await cleanupPendingMedia(media.id);
+          }
+
           removeMediaId(media.id);
         }
 
@@ -143,10 +219,12 @@ export default function ImageInput({
       props.onValueChange?.(value);
       setFiles(value);
     },
-    [files, maxFiles, props, uploadedMedias, removeMediaId],
+    [files, maxFiles, props, uploadedMedias, removeMediaId, initialFiles],
   );
 
   // Upload ke Cloudinary lalu buat record media.
+  const UPLOAD_WEIGHT = 90;
+
   const onUpload: FileUploadProps['onUpload'] = useCallback(
     async (uploadFiles, { onProgress, onSuccess, onError }) => {
       await Promise.all(
@@ -157,14 +235,17 @@ export default function ImageInput({
           cancelledFiles.current.delete(file);
 
           try {
+            // Tahap 1: upload ke Cloudinary (0-90%).
             const image = await uploadImageToCloudinary(
               file,
-              (progress) => onProgress(file, progress),
+              (progress) => onProgress(file, (progress * UPLOAD_WEIGHT) / 100),
               controller.signal,
             );
 
-            // File mungkin sudah dihapus saat upload.
             if (cancelledFiles.current.has(file)) return;
+
+            // Tahap 2: simpan ke database (90-100%).
+            onProgress(file, UPLOAD_WEIGHT);
 
             const res = await createMedia({
               publicId: image.publicId,
@@ -177,7 +258,6 @@ export default function ImageInput({
 
             const media = res.data!;
 
-            // Pengguna mungkin menghapus file ketika createMedia masih berlangsung.
             if (cancelledFiles.current.has(file)) {
               await cleanupPendingMedia(media.id);
               return;
@@ -190,11 +270,10 @@ export default function ImageInput({
             });
 
             addMediaId(media.id);
+            onProgress(file, 100);
             onSuccess(file);
           } catch (error) {
-            if (cancelledFiles.current.has(file)) {
-              return;
-            }
+            if (cancelledFiles.current.has(file)) return;
 
             const message =
               error instanceof Error
@@ -295,33 +374,56 @@ export default function ImageInput({
         ))}
 
       <FileUploadList>
-        {files.map((file, index) => (
-          <FileUploadItem
-            key={`${file.name}-${index}`}
-            value={file}
-            className="flex-col rounded-3xl"
-          >
-            <div className="flex w-full items-center gap-2">
-              <FileUploadItemPreview />
-              <FileUploadItemMetadata />
+        {files.map((file, index) => {
+          const initialMedia = initialFiles.get(file);
 
-              <FileUploadItemDelete
-                render={(deleteProps) => (
-                  <Button
-                    {...deleteProps}
-                    variant="ghost"
-                    size="icon"
-                    className="size-7 cursor-pointer"
-                  >
-                    <XIcon />
-                  </Button>
-                )}
-              />
-            </div>
+          return (
+            <FileUploadItem
+              key={`${file.name}-${index}`}
+              value={file}
+              className="flex-col rounded-3xl"
+            >
+              <div className="flex w-full items-center gap-2 relative">
+                <FileUploadItemPreview />
+                <FileUploadItemMetadata />
 
-            <FileUploadItemProgress />
-          </FileUploadItem>
-        ))}
+                <div className="flex items-center gap-3">
+                  {initialMedia && (
+                    <Badge className="text-[10px]">Digunakan</Badge>
+                  )}
+                  <FileUploadItemDelete
+                    render={(deleteProps) => (
+                      <Button
+                        {...deleteProps}
+                        variant="ghost"
+                        size="icon"
+                        className="size-7 cursor-pointer"
+                      >
+                        <XIcon />
+                      </Button>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {!initialMedia && (
+                <FileUploadItemProgress
+                  render={({ 'aria-valuenow': progress }) => (
+                    <Progress
+                      value={Number(progress ?? 0)}
+                      className="w-full *:data-[slot=progress-track]:h-1 **:text-xs gap-1.5"
+                    >
+                      <ProgressLabel className="font-normal text-muted-foreground">
+                        Mengunggah...
+                      </ProgressLabel>
+                      <ProgressValue />
+                    </Progress>
+                  )}
+                />
+              )}
+            </FileUploadItem>
+          );
+        })}
       </FileUploadList>
     </FileUpload>
   );

@@ -7,7 +7,7 @@ import '@fancyapps/ui/dist/carousel/carousel.arrows.css';
 import { Fancybox } from '@fancyapps/ui/dist/fancybox';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { MapPinIcon, Maximize2Icon } from 'lucide-react';
 import { cn, formatToRupiah } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -20,26 +20,29 @@ import CourtIcon from '@/components/app/icon/court';
 import { useDragScroll } from '@/hooks/use-drag-scroll';
 import VenueTabsList from '@/features/venues/components/venue-detail-tabs/tabs-list';
 
-const images = [
-  {
-    src: 'https://images.pexels.com/photos/7438732/pexels-photo-7438732.jpeg',
-    alt: 'Shuttlecock di lapangan badminton',
-  },
-  {
-    src: 'https://images.pexels.com/photos/8007418/pexels-photo-8007418.jpeg',
-    alt: 'Pertandingan badminton di lapangan',
-  },
-  {
-    src: 'https://images.pexels.com/photos/8713604/pexels-photo-8713604.jpeg',
-    alt: 'Pemain sedang bermain badminton',
-  },
-  {
-    src: 'https://images.pexels.com/photos/8007094/pexels-photo-8007094.jpeg',
-    alt: 'Pemain badminton di lapangan indoor',
-  },
-];
-
 export default function VenueDetailBanner({ venue }: { venue: Venues }) {
+  const images = useMemo(
+    () => [
+      { src: venue.thumbnail.url, alt: 'Gambar Utama Lapangan' },
+      ...venue.courts
+        .filter((court) => court.thumbnail !== null)
+        .map((court) => ({
+          src: court.thumbnail!.url,
+          alt: court.name,
+        })),
+      ...venue.medias.map((media) => ({
+        src: media.url,
+        alt: `Foto di ${venue.name}`,
+      })),
+    ],
+    [venue],
+  );
+
+  const imagesKey = useMemo(
+    () => images.map((image) => image.src).join('|'),
+    [images],
+  );
+
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const thumbnailRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -78,6 +81,7 @@ export default function VenueDetailBanner({ venue }: { venue: Venues }) {
     <Card className="gap-0 p-0 overflow-hidden rounded-3xl flex flex-col">
       <div className="flex-1 relative">
         <div
+          key={imagesKey}
           ref={carouselRef}
           className={cn(
             'f-carousel w-full h-80',
@@ -108,7 +112,8 @@ export default function VenueDetailBanner({ venue }: { venue: Venues }) {
         <div className="absolute bottom-4 left-4 z-2 space-y-2 inline-block">
           <h1 className="text-3xl font-black text-white">{venue.name}</h1>
           <span className="flex gap-2 text-white">
-            <MapPinIcon className="size-5 text-green-700 shrink-0" /> {venue.address}
+            <MapPinIcon className="size-5 text-green-700 shrink-0" />{' '}
+            {venue.address}
           </span>
         </div>
 

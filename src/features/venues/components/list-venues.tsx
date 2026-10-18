@@ -56,6 +56,7 @@ import {
 import Link from 'next/link';
 import { useState } from 'react';
 import { formatToRupiah } from '@/lib/utils';
+import Image from 'next/image';
 
 type ListVenuesProps = {
   venues: Venues[];
@@ -129,10 +130,19 @@ export default function ListVenues({ venues, sports }: ListVenuesProps) {
       {filteredVenues.length > 0 ? (
         <div className="grid lg:grid-cols-2 gap-6">
           {filteredVenues.map((venue) => (
-            <Card key={venue.id}>
-              <CardHeader>
-                <div className="flex items-center justify-between gap-3">
-                  <Badge variant="outline" className="capitalize">
+            <Card key={venue.id} className="overflow-hidden pt-0 group">
+              <div className="relative h-50 overflow-hidden">
+                <Image
+                  src={venue.thumbnail.url}
+                  alt={`Gambar utama ${venue.name}`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  loading="eager"
+                  className="object-cover group-hover:scale-105 transition duration-500"
+                />
+
+                <div className="absolute top-0 w-full flex items-center justify-between gap-3 px-6 py-3">
+                  <Badge className="capitalize">
                     <SportIcon
                       sportName={venue.sport.name as Sport}
                       className="size-5"
@@ -160,7 +170,7 @@ export default function ListVenues({ venues, sports }: ListVenuesProps) {
                       renderTrigger={
                         <Button
                           size="icon-xs"
-                          variant="destructive"
+                          variant="secondary"
                           className="cursor-pointer"
                         >
                           <Trash2Icon />
@@ -169,6 +179,9 @@ export default function ListVenues({ venues, sports }: ListVenuesProps) {
                     />
                   </div>
                 </div>
+              </div>
+
+              <CardHeader>
                 <CardTitle className="font-bold">{venue.name}</CardTitle>
                 <CardDescription className="space-y-2">
                   <span className="flex items-start gap-1 text-xs!">

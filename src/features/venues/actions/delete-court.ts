@@ -17,7 +17,9 @@ export async function deleteCourt(id: string) {
     if (!canDeleteCourt) throw new APIError('FORBIDDEN');
 
     return db.transaction(async (tx) => {
-      const court = await tx.query.courts.findFirst({ where: { id, deletedAt: {isNull: true} } });
+      const court = await tx.query.courts.findFirst({
+        where: { id, deletedAt: { isNull: true } },
+      });
 
       if (!court) {
         throw new APIError('NOT_FOUND', {
@@ -25,7 +27,9 @@ export async function deleteCourt(id: string) {
         });
       }
 
-      const activeCourts = await tx.query.courts.findMany({where: { venueId: court.venueId, deletedAt: {isNull: true} }});
+      const activeCourts = await tx.query.courts.findMany({
+        where: { venueId: court.venueId, deletedAt: { isNull: true } },
+      });
 
       if (activeCourts.length <= 1) {
         throw new APIError('BAD_REQUEST', {

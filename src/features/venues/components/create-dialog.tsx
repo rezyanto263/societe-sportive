@@ -22,7 +22,7 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { VenuesSchema } from '@/features/venues/schema';
 import { CreateVenueData } from '@/features/venues/types';
-import { Sports } from '@/database/types'; 
+import { Sports } from '@/database/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   AlertCircleIcon,
@@ -40,6 +40,8 @@ import { useState, useTransition } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import CourtIcon from '@/components/app/icon/court';
 import { useRouter } from 'next/navigation';
+import ImageInput from '@/components/app/form/image-input';
+import { cleanupPendingMedia } from '@/features/medias/actions/cleanup-pending-media';
 
 export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
   const [open, setOpen] = useState(false);
@@ -47,6 +49,7 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
   const router = useRouter();
 
   const defaultValues = {
+    thumbnailId: '',
     sportId: sports[0].id,
     name: '',
     address: '',
@@ -54,9 +57,9 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
     phoneNumber: '',
     notes: '',
     facilities: [],
-    courts: [{ name: '', specifications: [] }],
+    courts: [{ thumbnailId: null, name: '', specifications: [] }],
   };
-  
+
   const form = useForm<CreateVenueData>({
     resolver: zodResolver(VenuesSchema.create),
     defaultValues,
@@ -66,6 +69,20 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
     control: form.control,
     name: 'courts',
   });
+
+  async function handleRemoveCourt(index: number) {
+    const thumbnailId = form.getValues(`courts.${index}.thumbnailId`);
+
+    remove(index);
+
+    if (!thumbnailId) return;
+
+    try {
+      await cleanupPendingMedia(thumbnailId);
+    } catch (error) {
+      console.error('Gagal membersihkan gambar lapangan:', error);
+    }
+  }
 
   async function handleCreate(data: CreateVenueData) {
     startTransition(async () => {
@@ -121,6 +138,23 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
         >
           <ScrollArea className="*:data-[slot=scroll-area-viewport]:max-h-[calc(90dvh-14rem)]">
             <FieldGroup className="grid grid-cols-12 gap-6 p-3">
+              <div className="col-span-12">
+                <Controller
+                  name="thumbnailId"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <InputField
+                      field={field}
+                      fieldState={fieldState}
+                      label="Gambar Utama"
+                      required
+                      type="image"
+                      componentProps={{ dropzone: true }}
+                    />
+                  )}
+                />
+              </div>
+
               <div className="col-span-12">
                 <Controller
                   name="name"
@@ -271,6 +305,7 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
                       variant="outline"
                       onClick={() =>
                         append({
+                          thumbnailId: null,
                           name: '',
                           specifications: [],
                         })
@@ -286,6 +321,19 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
                       className="flex items-center gap-3 w-full rounded-3xl border bg-input/20 relative"
                     >
                       <div className="space-y-6 w-full p-3 md:p-6">
+                        <Controller
+                          control={form.control}
+                          name={`courts.${index}.thumbnailId`}
+                          render={({ field, fieldState }) => (
+                            <InputField
+                              field={field}
+                              fieldState={fieldState}
+                              label="Gambar Lapangan"
+                              type="image"
+                            />
+                          )}
+                        />
+
                         <Controller
                           control={form.control}
                           name={`courts.${index}.name`}
@@ -327,7 +375,7 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
                           className="absolute top-2 right-2 cursor-pointer"
                           variant="destructive"
                           size="icon-sm"
-                          onClick={() => remove(index)}
+                          onClick={() => handleRemoveCourt(index)}
                         >
                           <Trash2Icon />
                         </Button>

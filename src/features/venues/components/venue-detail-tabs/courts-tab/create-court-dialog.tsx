@@ -16,7 +16,7 @@ import { createCourt } from '@/features/venues/actions/create-court';
 import { VenuesSchema } from '@/features/venues/schema';
 import { CreateCourtData } from '@/features/venues/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PlusCircleIcon, Trash2Icon, XIcon } from 'lucide-react';
+import { PlusCircleIcon, XIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -27,7 +27,7 @@ export default function CreateCourtDialog({
   name,
   renderTrigger,
 }: {
-  venueId: string,
+  venueId: string;
   name: string;
   renderTrigger: React.JSX.Element;
 }) {
@@ -37,6 +37,7 @@ export default function CreateCourtDialog({
 
   const defaultValues = {
     venueId,
+    thumbnailId: '',
     name: '',
     specifications: [],
   };
@@ -92,7 +93,19 @@ export default function CreateCourtDialog({
           className="flex min-h-0 flex-1 flex-col gap-6"
         >
           <ScrollArea className="*:data-[slot=scroll-area-viewport]:max-h-[calc(90dvh-14rem)]">
-            <div className="p-3 space-y-3">
+            <div className="p-3 space-y-6">
+              <Controller
+                name="thumbnailId"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <InputField
+                    field={field}
+                    fieldState={fieldState}
+                    label="Gambar Lapangan"
+                    type="image"
+                  />
+                )}
+              />
               <Controller
                 name="name"
                 control={form.control}

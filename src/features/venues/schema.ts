@@ -4,7 +4,18 @@ import z from 'zod';
 export class VenuesSchema {
   static create = z
     .object({
-      sportId: z.uuid().nonempty('Sport ID harus diisi.'),
+      sportId: z.uuid({
+        error: (issue) =>
+          issue.input === undefined || issue.input === ''
+            ? 'ID olahraga harus diisi.'
+            : 'ID olahraga tidak valid.',
+      }),
+      thumbnailId: z.uuid({
+        error: (issue) =>
+          issue.input === undefined || issue.input === ''
+            ? 'Gambar utama harus diisi.'
+            : 'ID gambar utama tidak valid.',
+      }),
       name: z
         .string()
         .max(100, 'Nama tempat maksimal 100 karakter.')
@@ -32,9 +43,13 @@ export class VenuesSchema {
       courts: z
         .array(
           z.object({
+            thumbnailId: z.preprocess(
+              (value: string | null) => (value === '' ? null : value),
+              z.uuid('ID gambar lapangan tidak valid.').nullable(),
+            ),
             name: z
               .string()
-              .max(100, 'Nama Lapangan maksimal 100 karakter.')
+              .max(100, 'Nama lapangan maksimal 100 karakter.')
               .nonempty('Nama lapangan harus diisi.'),
             specifications: z
               .array(z.string())
@@ -49,14 +64,23 @@ export class VenuesSchema {
     });
 
   static update = VenuesSchema.create.safeExtend({
-    id: z.uuid('ID tidak valid.').nonempty('ID tempat harus diisi.'),
+    id: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID tempat harus diisi.'
+          : 'ID tempat tidak valid.',
+    }),
     courts: z
       .array(
         z.object({
           id: z.uuid('ID tidak valid.').nullable(),
+          thumbnailId: z.preprocess(
+            (value: string | null) => (value === '' ? null : value),
+            z.uuid('ID gambar lapangan tidak valid.').nullable(),
+          ),
           name: z
             .string()
-            .max(100, 'Nama Lapangan maksimal 100 karakter.')
+            .max(100, 'Nama lapangan maksimal 100 karakter.')
             .nonempty('Nama lapangan harus diisi.'),
           specifications: z.array(z.string()),
         }),
@@ -65,7 +89,12 @@ export class VenuesSchema {
   });
 
   static delete = z.object({
-    id: z.uuid('ID tidak valid.').nonempty('ID harus diisi.'),
+    id: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID tempat harus diisi.'
+          : 'ID tempat tidak valid.',
+    }),
     name: z
       .string()
       .max(100, 'Konfirmasi nama lapangan maksimal 100 karakter.')
@@ -75,9 +104,16 @@ export class VenuesSchema {
   static deleteCourt = VenuesSchema.delete;
 
   static createCourt = z.object({
-    venueId: z
-      .uuid('ID tempat tidak valid.')
-      .nonempty('ID tempat harus diisi.'),
+    venueId: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID tempat harus diisi.'
+          : 'ID tempat tidak valid.',
+    }),
+    thumbnailId: z.preprocess(
+      (value: string | null) => (value === '' ? null : value),
+      z.uuid('ID gambar lapangan tidak valid.').nullable(),
+    ),
     name: z
       .string()
       .max(100, 'Nama Lapangan maksimal 100 karakter.')
@@ -85,5 +121,30 @@ export class VenuesSchema {
     specifications: z
       .array(z.string())
       .min(1, 'Minimal 1 spesifikasi yang tersedia.'),
+  });
+
+  static syncPhoto = z.object({
+    venueId: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID tempat harus diisi.'
+          : 'ID tempat tidak valid.',
+    }),
+    mediaIds: z.array(z.uuid('ID gambar tidak valid.')),
+  });
+
+  static deletePhoto = z.object({
+    venueId: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID tempat harus diisi.'
+          : 'ID tempat tidak valid.',
+    }),
+    mediaId: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID foto harus diisi.'
+          : 'ID foto tidak valid.',
+    }),
   });
 }
