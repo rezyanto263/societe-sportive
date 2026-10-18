@@ -47,7 +47,7 @@ export default function VenueCourtsTab({ venue }: { venue: Venues }) {
           <Card key={court.id} className="overflow-hidden p-0 group gap-0">
             <div className="relative aspect-video overflow-hidden">
               <Image
-                src="https://images.pexels.com/photos/8007094/pexels-photo-8007094.jpeg"
+                src={court.thumbnail?.url ?? venue.thumbnail.url}
                 alt="Lapangan badminton"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"

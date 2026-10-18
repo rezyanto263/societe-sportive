@@ -58,6 +58,7 @@ export default function UpdateVenueDialog({
 
   const defaultValues = {
     id: venue.id,
+    thumbnailId: venue.thumbnailId,
     sportId: venue.sportId,
     name: venue.name,
     address: venue.address,
@@ -68,6 +69,7 @@ export default function UpdateVenueDialog({
     fee: Number(venue.fee),
     courts: venue.courts.map((court) => ({
       id: court.id,
+      thumbnailId: court.thumbnailId,
       name: court.name,
       specifications: court.specifications ?? [],
     })),
@@ -138,6 +140,26 @@ export default function UpdateVenueDialog({
         >
           <ScrollArea className="*:data-[slot=scroll-area-viewport]:max-h-[calc(90dvh-14rem)]">
             <FieldGroup className="grid grid-cols-12 gap-6 p-3">
+              <div className="col-span-12">
+                <Controller
+                  name="thumbnailId"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <InputField
+                      field={field}
+                      fieldState={fieldState}
+                      label="Gambar Utama"
+                      required
+                      type="image"
+                      componentProps={{
+                        dropzone: true,
+                        initialImages: [venue.thumbnail],
+                      }}
+                    />
+                  )}
+                />
+              </div>
+
               <div className="col-span-12">
                 <Controller
                   name="name"
@@ -291,6 +313,7 @@ export default function UpdateVenueDialog({
                       onClick={() =>
                         append({
                           id: null,
+                          thumbnailId: null,
                           name: '',
                           specifications: [],
                         })
@@ -306,6 +329,22 @@ export default function UpdateVenueDialog({
                       className="flex items-center gap-3 w-full rounded-3xl border bg-input/20 relative"
                     >
                       <div className="space-y-6 w-full p-3 md:p-6">
+                        <Controller
+                          control={form.control}
+                          name={`courts.${index}.thumbnailId`}
+                          render={({ field, fieldState }) => (
+                            <InputField
+                              field={field}
+                              fieldState={fieldState}
+                              label="Gambar Lapangan"
+                              type="image"
+                              componentProps={{
+                                initialImages: [venue.courts[index].thumbnail],
+                              }}
+                            />
+                          )}
+                        />
+
                         <Controller
                           control={form.control}
                           name={`courts.${index}.name`}

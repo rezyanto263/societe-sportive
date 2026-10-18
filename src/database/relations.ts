@@ -39,6 +39,13 @@ export const relations = defineRelations(schema, (r) => ({
     }),
   },
 
+  venueMedias: {
+    medias: r.many.medias({
+      from: r.venueMedias.venueId,
+      to: r.medias.id,
+    })
+  },
+
   courts: {
     thumbnail: r.one.medias({
       from: r.courts.thumbnailId,
