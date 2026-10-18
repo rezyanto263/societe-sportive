@@ -2,7 +2,7 @@
 
 import db from '@/database';
 import { users } from '@/database/schema';
-import getUser from '@/features/auth/actions/get-user';
+import { getCurrentUser } from '@/features/auth/queries/get-current-user';
 import { OnboardingProfileData } from '@/features/auth/types';
 import { auth } from '@/lib/auth';
 import { APIError, isAPIError } from 'better-auth/api';
@@ -11,7 +11,7 @@ import { headers } from 'next/headers';
 
 export default async function saveProfile(data: OnboardingProfileData) {
   try {
-    const user = await getUser(true);
+    const user = await getCurrentUser(true);
 
     const isPhoneNumberExists = await db.query.users.findFirst({
       where: { phoneNumber: data.phoneNumber },

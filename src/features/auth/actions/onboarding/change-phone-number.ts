@@ -2,7 +2,7 @@
 
 import db from '@/database';
 import { users } from '@/database/schema';
-import getUser from '@/features/auth/actions/get-user';
+import { getCurrentUser } from '@/features/auth/queries/get-current-user';
 import { OnboardingChangePhoneNumberData } from '@/features/auth/types';
 import { auth } from '@/lib/auth';
 import { APIError, isAPIError } from 'better-auth/api';
@@ -13,7 +13,7 @@ export default async function changePhoneNumber(
   data: OnboardingChangePhoneNumberData,
 ) {
   try {
-    const user = await getUser();
+    const user = await getCurrentUser();
 
     const isPhoneNumberExists = await db.query.users.findFirst({
       where: { phoneNumber: data.phoneNumber },

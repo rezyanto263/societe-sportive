@@ -5,7 +5,7 @@ import '@/components/editor/style.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 import { UserProvider } from '@/components/providers/user-provider';
-import getUser from '@/features/auth/actions/get-user';
+import { getCurrentUser } from '@/features/auth/queries/get-current-user';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 
@@ -20,7 +20,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
+  const user = await getCurrentUser();
 
   return (
     <html
