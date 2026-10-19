@@ -1,11 +1,11 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { getSports } from '@/features/matches/queries/get-sports';
-import { getVenues } from '@/features/venues/queries/get-venues';
-import CreateVenueDialog from '@/features/venues/components/create-dialog';
+import { Card, CardContent } from '@/shared/components/ui/card';
+import { getSports } from '@/modules/matches/queries/get-sports';
+import { getVenues } from '@/modules/venues/queries/get-venues';
+import CreateVenueDialog from '@/modules/venues/components/create-dialog';
 import { MapPinnedIcon, TrophyIcon } from 'lucide-react';
-import CourtIcon from '@/components/app/icon/court';
-import ListVenues from '@/features/venues/components/list-venues';
-import RefreshButton from '@/components/app/refresh-button';
+import CourtIcon from '@/shared/components/app/icon/court';
+import ListVenues from '@/modules/venues/components/list-venues';
+import RefreshButton from '@/shared/components/app/refresh-button';
 
 export default async function ListVenuePage({}) {
   const sports = await getSports();
@@ -85,7 +85,7 @@ export default async function ListVenuePage({}) {
           </CardContent>
         </Card>
       </div>
-      
+
       <ListVenues venues={venues} sports={sports} />
     </div>
   );

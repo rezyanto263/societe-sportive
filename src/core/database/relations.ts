@@ -1,0 +1,94 @@
+import { defineRelations } from 'drizzle-orm';
+import * as schema from '@/core/database/schema';
+
+export const relations = defineRelations(schema, (r) => ({
+  users: {
+    sessions: r.many.sessions(),
+    accounts: r.many.accounts(),
+  },
+
+  sessions: {
+    user: r.one.users({
+      from: r.sessions.userId,
+      to: r.users.id,
+    }),
+  },
+
+  accounts: {
+    user: r.one.users({
+      from: r.accounts.userId,
+      to: r.users.id,
+    }),
+  },
+
+  venues: {
+    courts: r.many.courts(),
+    sport: r.one.sports({
+      from: r.venues.sportId,
+      to: r.sports.id,
+      optional: false,
+    }),
+    thumbnail: r.one.medias({
+      from: r.venues.thumbnailId,
+      to: r.medias.id,
+      optional: false,
+    }),
+    medias: r.many.medias({
+      from: r.venues.id.through(r.venueMedias.venueId),
+      to: r.medias.id.through(r.venueMedias.mediaId),
+    }),
+  },
+
+  venueMedias: {
+    medias: r.many.medias({
+      from: r.venueMedias.venueId,
+      to: r.medias.id,
+    }),
+  },
+
+  courts: {
+    thumbnail: r.one.medias({
+      from: r.courts.thumbnailId,
+      to: r.medias.id,
+    }),
+    venue: r.one.venues({
+      from: r.courts.venueId,
+      to: r.venues.id,
+    }),
+    matches: r.many.matches({
+      from: r.courts.id.through(r.matchCourts.courtId),
+      to: r.matches.id.through(r.matchCourts.matchId),
+    }),
+  },
+
+  paymentAccounts: {
+    matches: r.many.matches({
+      from: r.paymentAccounts.id.through(
+        r.matchPaymentAccounts.paymentAccountId,
+      ),
+      to: r.matches.id.through(r.matchPaymentAccounts.matchId),
+    }),
+  },
+
+  sports: {
+    matches: r.many.matches(),
+    venues: r.many.venues(),
+  },
+
+  matches: {
+    sport: r.one.sports({
+      from: r.matches.sportId,
+      to: r.sports.id,
+    }),
+    courts: r.many.courts({
+      from: r.matches.id.through(r.matchCourts.matchId),
+      to: r.courts.id.through(r.matchCourts.courtId),
+    }),
+    paymentAccounts: r.many.paymentAccounts({
+      from: r.matches.id.through(r.matchPaymentAccounts.matchId),
+      to: r.paymentAccounts.id.through(r.matchPaymentAccounts.paymentAccountId),
+    }),
+  },
+}));
+
+export default relations;

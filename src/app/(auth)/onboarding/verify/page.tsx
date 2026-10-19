@@ -1,21 +1,21 @@
 'use client';
 
-import { useUser } from '@/components/providers/user-provider';
-import { Button } from '@/components/ui/button';
+import { useUser } from '@/shared/components/providers/user-provider';
+import { Button } from '@/shared/components/ui/button';
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldSeparator,
-} from '@/components/ui/field';
+} from '@/shared/components/ui/field';
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from '@/components/ui/input-otp';
-import resendOtp from '@/features/auth/actions/onboarding/resend-otp';
-import signOut from '@/features/auth/actions/sign-out';
-import verifyPhoneNumber from '@/features/auth/actions/onboarding/verify-phone-number';
+} from '@/shared/components/ui/input-otp';
+import resendOtp from '@/modules/auth/actions/onboarding/resend-otp';
+import signOut from '@/modules/auth/actions/sign-out';
+import verifyPhoneNumber from '@/modules/auth/actions/onboarding/verify-phone-number';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

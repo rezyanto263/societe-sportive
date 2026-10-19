@@ -1,18 +1,18 @@
 'use client';
 
-import InputField from '@/components/app/form/input-field';
-import { PhoneInput } from '@/components/app/form/phone-input';
-import { Button } from '@/components/ui/button';
+import InputField from '@/shared/components/app/form/input-field';
+import { PhoneInput } from '@/shared/components/app/form/phone-input';
+import { Button } from '@/shared/components/ui/button';
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field';
-import requestPasswordReset from '@/features/auth/actions/reset-password/request-password-reset';
-import { AuthSchema } from '@/features/auth/schema';
-import { RequestPasswordResetData } from '@/features/auth/types';
+} from '@/shared/components/ui/field';
+import requestPasswordReset from '@/modules/auth/actions/reset-password/request-password-reset';
+import { AuthSchema } from '@/modules/auth/schema';
+import { RequestPasswordResetData } from '@/modules/auth/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircleIcon, InfoIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -62,13 +62,13 @@ export default function RequestPasswordResetPage() {
           control={form.control}
           render={({ field, fieldState }) => (
             <InputField
-                field={field}
-                fieldState={fieldState}
-                label="Nomor Ponsel"
-                description="Nomor ponsel harus valid dan dapat dihubungi."
-                type="tel"
-                required
-              />
+              field={field}
+              fieldState={fieldState}
+              label="Nomor Ponsel"
+              description="Nomor ponsel harus valid dan dapat dihubungi."
+              type="tel"
+              required
+            />
             // <Field data-invalid={fieldState.invalid}>
             //   <FieldLabel htmlFor="phoneNumber">
             //     Nomor Ponsel <span className="text-destructive">*</span>

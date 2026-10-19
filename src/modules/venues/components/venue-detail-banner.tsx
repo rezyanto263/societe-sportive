@@ -1,0 +1,195 @@
+'use client';
+
+import useCarousel from '@/shared/hooks/use-carousel';
+import '@fancyapps/ui/dist/carousel/carousel.css';
+import { Arrows } from '@fancyapps/ui/dist/carousel/carousel.arrows';
+import '@fancyapps/ui/dist/carousel/carousel.arrows.css';
+import { Fancybox } from '@fancyapps/ui/dist/fancybox';
+import '@fancyapps/ui/dist/fancybox/fancybox.css';
+import Image from 'next/image';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { MapPinIcon, Maximize2Icon } from 'lucide-react';
+import { cn } from '@/shared/lib/utils';
+import { formatToRupiah } from '@/shared/lib/format';
+import { Button } from '@/shared/components/ui/button';
+import { Card } from '@/shared/components/ui/card';
+import { Venues } from '@/core/database/types';
+import { Badge } from '@/shared/components/ui/badge';
+import SportIcon from '@/shared/components/app/icon/sports';
+import { Sport } from '@/modules/sports/types';
+import CourtIcon from '@/shared/components/app/icon/court';
+import { useDragScroll } from '@/shared/hooks/use-drag-scroll';
+import VenueTabsList from '@/modules/venues/components/venue-detail-tabs/tabs-list';
+
+export default function VenueDetailBanner({ venue }: { venue: Venues }) {
+  const images = useMemo(
+    () => [
+      { src: venue.thumbnail.url, alt: 'Gambar Utama Lapangan' },
+      ...venue.courts
+        .filter((court) => court.thumbnail !== null)
+        .map((court) => ({
+          src: court.thumbnail!.url,
+          alt: court.name,
+        })),
+      ...venue.medias.map((media) => ({
+        src: media.url,
+        alt: `Foto di ${venue.name}`,
+      })),
+    ],
+    [venue],
+  );
+
+  const imagesKey = useMemo(
+    () => images.map((image) => image.src).join('|'),
+    [images],
+  );
+
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const thumbnailRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const { setElement, onMouseDown, onMouseMove, stopDragging } =
+    useDragScroll<HTMLDivElement>();
+
+  const [carouselRef, carouselIntanceRef] = useCarousel({
+    plugins: { Arrows },
+    gestures: false,
+    on: {
+      change: (carousel) => {
+        setActiveIndex(carousel.getPageIndex());
+      },
+    },
+  });
+
+  useEffect(() => {
+    thumbnailRefs.current[activeIndex]?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'nearest',
+    });
+  }, [activeIndex]);
+
+  useEffect(() => {
+    const selector = '[data-fancybox="venue-gallery"]';
+
+    Fancybox.bind(selector);
+
+    return () => {
+      Fancybox.unbind(selector);
+    };
+  }, []);
+
+  return (
+    <Card className="gap-0 p-0 overflow-hidden rounded-3xl flex flex-col">
+      <div className="flex-1 relative">
+        <div
+          key={imagesKey}
+          ref={carouselRef}
+          className={cn(
+            'f-carousel w-full h-80',
+            '[&_.f-button]:opacity-0 [&_.f-button]:transition-opacity [&_.f-button]:duration-200 hover:[&_.f-button]:opacity-100',
+          )}
+        >
+          {images.map((image, index) => (
+            <div key={index} className="f-carousel__slide group">
+              <a
+                href={image.src}
+                data-fancybox="venue-gallery"
+                data-caption={image.alt}
+                draggable="false"
+                className="relative block size-full after:absolute after:inset-0 after:bg-linear-to-t after:from-black/80 after:to-transparent"
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  loading="eager"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </a>
+            </div>
+          ))}
+        </div>
+
+        <div className="absolute bottom-4 left-4 z-2 space-y-2 inline-block">
+          <h1 className="text-3xl font-black text-white">{venue.name}</h1>
+          <span className="flex gap-2 text-white">
+            <MapPinIcon className="size-5 text-green-700 shrink-0" />{' '}
+            {venue.address}
+          </span>
+        </div>
+
+        <div className="absolute top-4 left-4 z-2 inline-flex items-center gap-3">
+          <Badge className="capitalize">
+            <SportIcon sportName={venue.sport.name as Sport} />
+            {venue.sport.name}
+          </Badge>
+          <Badge className="capitalize" variant="secondary">
+            <CourtIcon />
+            {venue.courts.length} Lapangan
+          </Badge>
+        </div>
+
+        <div className="absolute top-4 right-4 z-2 inline-flex items-center gap-3">
+          <Badge variant="secondary">
+            {formatToRupiah(Number(venue.fee))} / jam
+          </Badge>
+        </div>
+      </div>
+
+      <div className="bg-accent flex items-center justify-between gap-3 p-3">
+        <div
+          className="flex gap-3 overflow-x-auto no-scrollbar select-none cursor-pointer"
+          ref={setElement}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={stopDragging}
+          onMouseLeave={stopDragging}
+        >
+          {images.map((image, index) => (
+            <button
+              key={index}
+              ref={(element) => {
+                thumbnailRefs.current[index] = element;
+              }}
+              type="button"
+              onClick={() => carouselIntanceRef?.goTo(index)}
+              aria-label={`Lihat gambar ${index + 1}`}
+              aria-current={activeIndex === index ? 'true' : undefined}
+              className={cn(
+                'cursor-pointer relative h-14 w-22 shrink-0 overflow-hidden rounded-xl border-2 transition',
+                'border-transparent opacity-60 hover:opacity-100',
+                activeIndex === index && 'border-green-700 opacity-100',
+              )}
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                loading="eager"
+                fill
+                sizes="112px"
+                className="object-cover"
+                draggable={false}
+              />
+            </button>
+          ))}
+        </div>
+
+        <Button
+          size="sm"
+          variant="outline"
+          className="cursor-pointer"
+          onClick={() => {
+            Fancybox.fromSelector('[data-fancybox="venue-gallery"]', {
+              startIndex: activeIndex,
+            });
+          }}
+        >
+          <Maximize2Icon />
+          Layar Penuh
+        </Button>
+      </div>
+
+      <VenueTabsList />
+    </Card>
+  );
+}

@@ -1,19 +1,19 @@
 'use client';
 
-import InputField from '@/components/app/form/input-field';
-import { PhoneInput } from '@/components/app/form/phone-input';
-import { Button } from '@/components/ui/button';
+import InputField from '@/shared/components/app/form/input-field';
+import { PhoneInput } from '@/shared/components/app/form/phone-input';
+import { Button } from '@/shared/components/ui/button';
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field';
-import changePhoneNumber from '@/features/auth/actions/onboarding/change-phone-number';
-import requestPasswordReset from '@/features/auth/actions/reset-password/request-password-reset';
-import { AuthSchema } from '@/features/auth/schema';
-import { OnboardingChangePhoneNumberData } from '@/features/auth/types';
+} from '@/shared/components/ui/field';
+import changePhoneNumber from '@/modules/auth/actions/onboarding/change-phone-number';
+import requestPasswordReset from '@/modules/auth/actions/reset-password/request-password-reset';
+import { AuthSchema } from '@/modules/auth/schema';
+import { OnboardingChangePhoneNumberData } from '@/modules/auth/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircleIcon, InfoIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -76,7 +76,7 @@ export default function OnboardingChangePhoneNumberPage() {
             />
           )}
         />
-        
+
         <Field>
           <Button className="cursor-pointer" type="submit">
             Simpan & Lanjutkan

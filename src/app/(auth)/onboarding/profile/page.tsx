@@ -1,15 +1,12 @@
 'use client';
 
-import InputField from '@/components/app/form/input-field';
-import { useUser } from '@/components/providers/user-provider';
-import { Button } from '@/components/ui/button';
-import {
-  Field,
-  FieldGroup,
-} from '@/components/ui/field';
-import saveProfile from '@/features/auth/actions/onboarding/save-profile';
-import { AuthSchema } from '@/features/auth/schema';
-import { OnboardingProfileData } from '@/features/auth/types';
+import InputField from '@/shared/components/app/form/input-field';
+import { useUser } from '@/shared/components/providers/user-provider';
+import { Button } from '@/shared/components/ui/button';
+import { Field, FieldGroup } from '@/shared/components/ui/field';
+import saveProfile from '@/modules/auth/actions/onboarding/save-profile';
+import { AuthSchema } from '@/modules/auth/schema';
+import { OnboardingProfileData } from '@/modules/auth/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';

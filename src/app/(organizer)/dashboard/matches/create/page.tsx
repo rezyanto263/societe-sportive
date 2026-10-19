@@ -1,9 +1,9 @@
 'use client';
 
-import InputField from '@/components/app/form/input-field';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import StepNumber from '@/features/matches/components/step-number';
+import InputField from '@/shared/components/app/form/input-field';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/shared/components/ui/card';
+import StepNumber from '@/modules/matches/components/step-number';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';

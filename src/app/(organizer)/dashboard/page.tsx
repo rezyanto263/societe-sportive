@@ -1,23 +1,27 @@
 'use client';
 
-import { useUser } from '@/components/providers/user-provider';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { useUser } from '@/shared/components/providers/user-provider';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/shared/components/ui/avatar';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@/shared/components/ui/card';
 import {
   Progress,
   ProgressLabel,
   ProgressValue,
-} from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
-import { getInitials } from '@/lib/utils';
+} from '@/shared/components/ui/progress';
+import { Separator } from '@/shared/components/ui/separator';
+import { getInitials } from '@/shared/lib/string';
 import {
   AlertCircle,
   ArrowRight,

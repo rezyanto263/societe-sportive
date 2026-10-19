@@ -1,23 +1,23 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/components/ui/button';
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldSeparator,
-} from '@/components/ui/field';
+} from '@/shared/components/ui/field';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Controller, useForm } from 'react-hook-form';
-import { SignUpData } from '@/features/auth/types';
+import { SignUpData } from '@/modules/auth/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AuthSchema } from '@/features/auth/schema';
-import signInWithGoogle from '@/features/auth/actions/sign-in-with-google';
+import { AuthSchema } from '@/modules/auth/schema';
+import signInWithGoogle from '@/modules/auth/actions/sign-in-with-google';
 import { toast } from 'sonner';
-import signUp from '@/features/auth/actions/sign-up';
+import signUp from '@/modules/auth/actions/sign-up';
 import { useRouter } from 'next/navigation';
-import InputField from '@/components/app/form/input-field';
+import InputField from '@/shared/components/app/form/input-field';
 
 export default function SignUpPage() {
   const router = useRouter();

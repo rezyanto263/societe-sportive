@@ -1,8 +1,8 @@
 'use client';
 
-import InputField from '@/components/app/form/input-field';
-import SecretInput from '@/components/app/form/secret-input';
-import { Button } from '@/components/ui/button';
+import InputField from '@/shared/components/app/form/input-field';
+import SecretInput from '@/shared/components/app/form/secret-input';
+import { Button } from '@/shared/components/ui/button';
 import {
   Field,
   FieldDescription,
@@ -10,11 +10,11 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from '@/components/ui/field';
-import signIn from '@/features/auth/actions/sign-in';
-import signInWithGoogle from '@/features/auth/actions/sign-in-with-google';
-import { AuthSchema } from '@/features/auth/schema';
-import { SignInData } from '@/features/auth/types';
+} from '@/shared/components/ui/field';
+import signIn from '@/modules/auth/actions/sign-in';
+import signInWithGoogle from '@/modules/auth/actions/sign-in-with-google';
+import { AuthSchema } from '@/modules/auth/schema';
+import { SignInData } from '@/modules/auth/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircleIcon } from 'lucide-react';
 import Image from 'next/image';

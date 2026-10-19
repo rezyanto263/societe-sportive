@@ -1,8 +1,8 @@
 'use client';
 
-import { useUser } from '@/components/providers/user-provider';
-import { Button } from '@/components/ui/button';
-import signOut from '@/features/auth/actions/sign-out';
+import { useUser } from '@/shared/components/providers/user-provider';
+import { Button } from '@/shared/components/ui/button';
+import signOut from '@/modules/auth/actions/sign-out';
 import Link from 'next/link';
 
 export default function HomePage() {

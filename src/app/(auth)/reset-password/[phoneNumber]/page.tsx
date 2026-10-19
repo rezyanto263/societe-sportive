@@ -1,24 +1,24 @@
 'use client';
 
-import InputField from '@/components/app/form/input-field';
-import { Button } from '@/components/ui/button';
+import InputField from '@/shared/components/app/form/input-field';
+import { Button } from '@/shared/components/ui/button';
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+} from '@/shared/components/ui/field';
+import { Input } from '@/shared/components/ui/input';
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from '@/components/ui/input-otp';
-import requestPasswordReset from '@/features/auth/actions/reset-password/request-password-reset';
-import verifyPasswordReset from '@/features/auth/actions/reset-password/verify-password-reset';
-import { AuthSchema } from '@/features/auth/schema';
-import { VerifyPasswordResetData } from '@/features/auth/types';
+} from '@/shared/components/ui/input-otp';
+import requestPasswordReset from '@/modules/auth/actions/reset-password/request-password-reset';
+import verifyPasswordReset from '@/modules/auth/actions/reset-password/verify-password-reset';
+import { AuthSchema } from '@/modules/auth/schema';
+import { VerifyPasswordResetData } from '@/modules/auth/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { AlertCircleIcon, InfoIcon } from 'lucide-react';
@@ -195,7 +195,7 @@ export default function VerifyPasswordResetPage({
             />
           )}
         />
-        
+
         <Field>
           <Button type="submit" className="cursor-pointer">
             Verifikasi & Simpan

@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import '@/components/editor/style.css';
-import { cn } from '@/lib/utils';
-import { Toaster } from '@/components/ui/sonner';
-import { UserProvider } from '@/components/providers/user-provider';
-import { getCurrentUser } from '@/features/auth/queries/get-current-user';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { ThemeProvider } from '@/components/providers/theme-provider';
+import '@/shared/components/editor/style.css';
+import { cn } from '@/shared/lib/utils';
+import { Toaster } from '@/shared/components/ui/sonner';
+import { UserProvider } from '@/shared/components/providers/user-provider';
+import { getCurrentUser } from '@/modules/auth/queries/get-current-user';
+import { TooltipProvider } from '@/shared/components/ui/tooltip';
+import { ThemeProvider } from '@/shared/components/providers/theme-provider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
