@@ -1,20 +1,20 @@
-import authProxyHandler from '@/lib/proxy/handlers/auth';
-import guestProxyHandler from '@/lib/proxy/handlers/guest';
-import onboardingProxyHandler from '@/lib/proxy/handlers/onboarding';
-import organizerProxyHandler from '@/lib/proxy/handlers/organizer';
-import { authRoutes, guestRoutes } from '@/lib/proxy/routes';
-import { matchesRoute, ProxyHandler, runProxyChain } from '@/lib/proxy/utils';
+import authProxyHandler from '@/core/proxy/handlers/auth';
+import guestProxyHandler from '@/core/proxy/handlers/guest';
+import onboardingProxyHandler from '@/core/proxy/handlers/onboarding';
+import organizerProxyHandler from '@/core/proxy/handlers/organizer';
+import { authRoutes, guestRoutes } from '@/core/proxy/routes';
+import { matchesRoute, ProxyHandler, runProxyChain } from '@/core/proxy/utils';
 import { NextRequest } from 'next/server';
 
 export default async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const handlers: ProxyHandler[] = [onboardingProxyHandler];
 
-  if (pathname.startsWith('/dashboard')) handlers.push(organizerProxyHandler);
-
   if (matchesRoute(pathname, guestRoutes)) handlers.push(guestProxyHandler);
-
+  
   if (matchesRoute(pathname, authRoutes)) handlers.push(authProxyHandler);
+  
+  if (pathname.startsWith('/dashboard')) handlers.push(organizerProxyHandler);
 
   return runProxyChain(req, handlers);
 }

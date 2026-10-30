@@ -1,0 +1,60 @@
+'use server';
+
+import db from '@/core/database';
+import { courts, venues } from '@/core/database/schema';
+import { auth } from '@/core/auth/server';
+import { APIError, isAPIError } from 'better-auth/api';
+import { eq } from 'drizzle-orm';
+import { headers } from 'next/headers';
+import { updateTag } from 'next/cache';
+import { cacheTags } from '@/core/cache/tags';
+
+export async function deleteVenue(id: string) {
+  try {
+    const { success: canDeleteVenue } = await auth.api.userHasPermission({
+      body: { permissions: { venues: ['delete'] } },
+      headers: await headers(),
+    });
+
+    if (!canDeleteVenue) throw new APIError('FORBIDDEN');
+
+    return db.transaction(async (tx) => {
+      const isVenueExists = await tx.query.venues.findFirst({ where: { id } });
+
+      if (!isVenueExists)
+        throw new APIError('NOT_FOUND', {
+          message: 'Tempat & Lapangan tidak ditemukan',
+        });
+
+      await tx
+        .update(venues)
+        .set({ deletedAt: new Date() })
+        .where(eq(venues.id, id));
+      await tx
+        .update(courts)
+        .set({ deletedAt: new Date() })
+        .where(eq(courts.venueId, id));
+
+      updateTag(cacheTags.venues.list);
+
+      return {
+        success: true,
+        message: 'Berhasil menghapus tempat & lapangan.',
+      };
+    });
+  } catch (error) {
+    console.error(error);
+
+    if (isAPIError(error)) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+
+    return {
+      success: false,
+      message: 'Terjadi kesalahan.',
+    };
+  }
+}

@@ -1,7 +1,7 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "@tailwindcss/typography";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -132,4 +132,12 @@
 
 .f-carousel .f-button {
   @apply bg-background/50! rounded-full mx-3;
+}
+
+#nprogress {
+  @apply z-99999!;
+}
+
+#nprogress .bar {
+  @apply bg-primary! z-99999!;
 }

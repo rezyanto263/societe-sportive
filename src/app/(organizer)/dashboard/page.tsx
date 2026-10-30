@@ -1,23 +1,25 @@
-'use client';
-
-import { useUser } from '@/components/providers/user-provider';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { getCurrentUser } from '@/core/auth/session';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/shared/components/ui/avatar';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@/shared/components/ui/card';
 import {
   Progress,
   ProgressLabel,
   ProgressValue,
-} from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
-import { getInitials } from '@/lib/utils';
+} from '@/shared/components/ui/progress';
+import { Separator } from '@/shared/components/ui/separator';
+import { getInitials } from '@/shared/lib/string';
 import {
   AlertCircle,
   ArrowRight,
@@ -30,10 +32,13 @@ import {
   TrophyIcon,
   Users2Icon,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
-export default function DashboardPage() {
-  const { user } = useUser();
+export const instant = false;
+
+export default async function DashboardPage() {
+  const user = await getCurrentUser();
 
   return (
     <div className="p-6 space-y-8">
@@ -280,14 +285,19 @@ export default function DashboardPage() {
                   >
                     <Avatar>
                       <AvatarImage
-                        src={
-                          user?.image ??
-                          `https://api.dicebear.com/10.x/notionists/svg?seed=${user?.id ?? 'user'}`
+                        render={
+                          <Image
+                            src={
+                              user?.image ??
+                              `https://api.dicebear.com/10.x/notionists/svg?seed=${user?.id ?? 'user'}`
+                            }
+                            alt={user?.name ?? 'Avatar'}
+                            fill
+                          />
                         }
-                        alt={user?.name ?? 'user'}
                       />
                       <AvatarFallback>
-                        {getInitials(user?.name ?? 'User')}
+                        {getInitials(user?.name ?? '?')}
                       </AvatarFallback>
                     </Avatar>
                     <div className="leading-4">

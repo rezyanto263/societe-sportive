@@ -1,13 +1,12 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
-import '@/components/editor/style.css';
-import { cn } from '@/lib/utils';
-import { Toaster } from '@/components/ui/sonner';
-import { UserProvider } from '@/components/providers/user-provider';
-import getUser from '@/features/auth/actions/get-user';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { ThemeProvider } from '@/components/providers/theme-provider';
+import '@/app/globals.css';
+import '@/shared/components/editor/style.css';
+import { cn } from '@/shared/lib/utils';
+import { Toaster } from '@/shared/components/ui/sonner';
+import { TooltipProvider } from '@/shared/components/ui/tooltip';
+import { ThemeProvider } from '@/shared/components/providers/theme-provider';
+import NextTopLoader from 'nextjs-toploader';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -20,23 +19,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
-
   return (
     <html
       lang="id"
       className={cn('min-h-svh max-h-svh', 'antialiased', inter.variable)}
       suppressHydrationWarning
     >
-      <body className="min-h-svh max-h-svh flex flex-col overflow-hidden">
-        <UserProvider user={user}>
-          <ThemeProvider>
-            <TooltipProvider>
-              <Toaster />
-              {children}
-            </TooltipProvider>
-          </ThemeProvider>
-        </UserProvider>
+      <body className="min-h-svh max-h-svh w-svw flex flex-col overflow-hidden">
+        <NextTopLoader showSpinner={false} height={2} shadow={false} />
+        <ThemeProvider>
+          <TooltipProvider>
+            <Toaster />
+            {children}
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

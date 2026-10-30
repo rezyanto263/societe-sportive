@@ -1,15 +1,51 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { getSports } from '@/features/matches/queries/get-sports';
-import { getVenues } from '@/features/venues/queries/get-venues';
-import CreateVenueDialog from '@/features/venues/components/create-dialog';
-import { MapPinnedIcon, TrophyIcon } from 'lucide-react';
-import CourtIcon from '@/components/app/icon/court';
-import ListVenues from '@/features/venues/components/list-venues';
-import RefreshButton from '@/components/app/refresh-button';
+import { Card } from '@/shared/components/ui/card';
+import { getSports } from '@/modules/sports/queries/get-sports';
+import CreateVenueDialog from '@/modules/venues/components/create-dialog';
+import { MapPinnedIcon } from 'lucide-react';
+import RefreshButton from '@/shared/components/app/refresh-button';
+import { Suspense } from 'react';
+import VenueStats from '@/modules/venues/components/venue-stats';
+import VenueStatsSkeleton from '@/modules/venues/components/venue-stats/skeleton';
+import { Skeleton } from '@/shared/components/ui/skeleton';
+import { VenuesSchema } from '@/modules/venues/schema';
+import { getVenues } from '@/modules/venues/queries/get-venues';
+import VenueFiltersSkeleton from '@/modules/venues/components/venue-filters/skeleton';
+import VenueFilters from '@/modules/venues/components/venue-filters';
+import VenueListSkeleton from '@/modules/venues/components/venue-list/skeleton';
+import VenueList from '@/modules/venues/components/venue-list';
 
-export default async function ListVenuePage({}) {
-  const sports = await getSports();
-  const venues = await getVenues();
+type Props = {
+  searchParams: Promise<{
+    keyword?: string;
+    page?: string;
+    limit?: string;
+    sport?: string;
+  }>;
+};
+
+export const instant = false;
+
+export default async function VenueListPage({ searchParams }: Props) {
+  const { page, limit, ...params } = await searchParams;
+
+  const search = VenuesSchema.searchParams.safeParse({
+    page: Number(page ?? 1),
+    limit: Number(limit ?? 10),
+    ...params,
+  });
+
+  const filters = search.success
+    ? search.data
+    : VenuesSchema.searchParams.parse({});
+
+  const queryString = new URLSearchParams({
+    ...filters,
+    page: String(filters.page),
+    limit: String(filters.limit),
+  }).toString();
+
+  const venuesPromise = getVenues(filters);
+  const sportsPromise = getSports();
 
   return (
     <div className="p-6 space-y-8">
@@ -29,64 +65,30 @@ export default async function ListVenuePage({}) {
         <div className="flex items-center gap-3">
           <RefreshButton />
 
-          <CreateVenueDialog sports={sports} />
+          <Suspense fallback={<Skeleton className="h-9 w-42" />}>
+            <CreateVenueDialog sportsPromise={sportsPromise} />
+          </Suspense>
         </div>
       </Card>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        <Card>
-          <CardContent className="flex items-center gap-3">
-            <div className="p-3.5 bg-green-700/20 rounded-xl">
-              <MapPinnedIcon className="text-green-700 size-7" />
-            </div>
-            <div className="text-muted-foreground flex flex-col gap-1">
-              <span>TOTAL TEMPAT SEWA</span>
-              <span>
-                <span className="text-primary font-bold text-3xl mr-1">
-                  {venues.length}
-                </span>{' '}
-                lokasi
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+      <Suspense fallback={<VenueStatsSkeleton />}>
+        <VenueStats />
+      </Suspense>
 
-        <Card>
-          <CardContent className="flex items-center gap-3">
-            <div className="p-3.5 bg-blue-700/20 rounded-xl">
-              <CourtIcon className="text-blue-700 size-7" />
-            </div>
-            <div className="text-muted-foreground flex flex-col gap-1">
-              <span>TOTAL LAPANGAN</span>
-              <span>
-                <span className="text-primary font-bold text-3xl mr-1">
-                  {venues.reduce((acc, venue) => acc + venue.courts.length, 0)}
-                </span>{' '}
-                lapangan
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+      <Suspense fallback={<VenueFiltersSkeleton />}>
+        <VenueFilters
+          queryString={queryString}
+          venuesPromise={venuesPromise}
+          sportsPromise={sportsPromise}
+        />
+      </Suspense>
 
-        <Card>
-          <CardContent className="flex items-center gap-3">
-            <div className="p-3.5 bg-yellow-700/20 rounded-xl">
-              <TrophyIcon className="text-yellow-700 size-7" />
-            </div>
-            <div className="text-muted-foreground flex flex-col gap-1">
-              <span>TOTAL CABANG OLAHRAGA</span>
-              <span>
-                <span className="text-primary font-bold text-3xl mr-1">
-                  {sports.length}
-                </span>{' '}
-                cabang
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <ListVenues venues={venues} sports={sports} />
+      <Suspense fallback={<VenueListSkeleton />}>
+        <VenueList
+          venuesPromise={venuesPromise}
+          sportsPromise={sportsPromise}
+        />
+      </Suspense>
     </div>
   );
 }

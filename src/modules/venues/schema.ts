@@ -1,0 +1,161 @@
+import { SPORTS } from '@/modules/sports/constants';
+import { isValidPhoneNumber } from 'libphonenumber-js';
+import z from 'zod';
+
+export class VenuesSchema {
+  static create = z
+    .object({
+      sportId: z.uuid({
+        error: (issue) =>
+          issue.input === undefined || issue.input === ''
+            ? 'ID olahraga harus diisi.'
+            : 'ID olahraga tidak valid.',
+      }),
+      thumbnailId: z.uuid({
+        error: (issue) =>
+          issue.input === undefined || issue.input === ''
+            ? 'Gambar utama harus diisi.'
+            : 'ID gambar utama tidak valid.',
+      }),
+      name: z
+        .string()
+        .max(100, 'Nama tempat maksimal 100 karakter.')
+        .nonempty('Nama tempat harus diisi.'),
+      phoneNumber: z.string().nonempty('Nomor ponsel harus diisi.'),
+      googleMapsUrl: z
+        .url('Tautan tidak valid.')
+        .nonempty('Tautan google maps harus diisi.'),
+      address: z
+        .string()
+        .max(200, 'Alamat maksimal 200 karakter.')
+        .nonempty('Alamat harus diisi.'),
+      facilities: z
+        .array(z.string())
+        .min(1, 'Minimal 1 fasilitas yang tersedia.'),
+      notes: z.string().max(2000, 'Catatan maksimal 2000 karakter.').nullable(),
+      fee: z
+        .number({
+          error: (iss) =>
+            iss.input === undefined || iss.input === null
+              ? 'Harga sewa harus diisi.'
+              : 'Harga sewa harus berupa angka.',
+        })
+        .min(0, 'Harga sewa tidak boleh negatif.'),
+      courts: z
+        .array(
+          z.object({
+            thumbnailId: z.preprocess(
+              (value: string | null) => (value === '' ? null : value),
+              z.uuid('ID gambar lapangan tidak valid.').nullable(),
+            ),
+            name: z
+              .string()
+              .max(100, 'Nama lapangan maksimal 100 karakter.')
+              .nonempty('Nama lapangan harus diisi.'),
+            specifications: z
+              .array(z.string())
+              .min(1, 'Minimal 1 spesifikasi yang tersedia.'),
+          }),
+        )
+        .min(1, 'Minimal 1 lapangan yang tersedia.'),
+    })
+    .refine((data) => isValidPhoneNumber(data.phoneNumber), {
+      message: 'Nomor ponsel tidak valid.',
+      path: ['phoneNumber'],
+    });
+
+  static update = VenuesSchema.create.safeExtend({
+    id: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID tempat harus diisi.'
+          : 'ID tempat tidak valid.',
+    }),
+    courts: z
+      .array(
+        z.object({
+          id: z.uuid('ID tidak valid.').nullable(),
+          thumbnailId: z.preprocess(
+            (value: string | null) => (value === '' ? null : value),
+            z.uuid('ID gambar lapangan tidak valid.').nullable(),
+          ),
+          name: z
+            .string()
+            .max(100, 'Nama lapangan maksimal 100 karakter.')
+            .nonempty('Nama lapangan harus diisi.'),
+          specifications: z.array(z.string()),
+        }),
+      )
+      .min(1, 'Minimal 1 lapangan yang tersedia.'),
+  });
+
+  static delete = z.object({
+    id: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID tempat harus diisi.'
+          : 'ID tempat tidak valid.',
+    }),
+    name: z
+      .string()
+      .max(100, 'Konfirmasi nama lapangan maksimal 100 karakter.')
+      .nonempty('Konfirmasi nama lapangan harus diisi.'),
+  });
+
+  static deleteCourt = VenuesSchema.delete;
+
+  static createCourt = z.object({
+    venueId: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID tempat harus diisi.'
+          : 'ID tempat tidak valid.',
+    }),
+    thumbnailId: z.preprocess(
+      (value: string | null) => (value === '' ? null : value),
+      z.uuid('ID gambar lapangan tidak valid.').nullable(),
+    ),
+    name: z
+      .string()
+      .max(100, 'Nama Lapangan maksimal 100 karakter.')
+      .nonempty('Nama lapangan harus diisi.'),
+    specifications: z
+      .array(z.string())
+      .min(1, 'Minimal 1 spesifikasi yang tersedia.'),
+  });
+
+  static syncPhoto = z.object({
+    venueId: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID tempat harus diisi.'
+          : 'ID tempat tidak valid.',
+    }),
+    mediaIds: z.array(z.uuid('ID gambar tidak valid.')),
+  });
+
+  static deletePhoto = z.object({
+    venueId: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID tempat harus diisi.'
+          : 'ID tempat tidak valid.',
+    }),
+    mediaId: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID foto harus diisi.'
+          : 'ID foto tidak valid.',
+    }),
+  });
+
+  static searchParams = z.object({
+    keyword: z.string().max(100).optional(),
+    sport: z.enum([SPORTS.BADMINTON, SPORTS.BASKETBALL]).optional(),
+    page: z.coerce.number().int().positive().optional().default(1),
+    limit: z
+      .union([z.literal(10), z.literal(25), z.literal(50), z.literal(100)])
+      .optional()
+      .default(10),
+  });
+}

@@ -1,26 +1,23 @@
 'use client';
 
-import InputField from '@/components/app/form/input-field';
-import { useUser } from '@/components/providers/user-provider';
-import { Button } from '@/components/ui/button';
-import {
-  Field,
-  FieldGroup,
-} from '@/components/ui/field';
-import saveProfile from '@/features/auth/actions/onboarding/save-profile';
-import { AuthSchema } from '@/features/auth/schema';
-import { OnboardingProfileData } from '@/features/auth/types';
+import InputField from '@/shared/components/app/form/input-field';
+import { Button } from '@/shared/components/ui/button';
+import { Field, FieldGroup } from '@/shared/components/ui/field';
+import saveProfile from '@/modules/auth/actions/onboarding/save-profile';
+import { AuthSchema } from '@/modules/auth/schema';
+import { OnboardingProfileData } from '@/modules/auth/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { authClient } from '@/core/auth/client';
 
 const RESEND_COOLDOWN = Number(process.env.NEXT_PUBLIC_RESEND_COOLDOWN!);
 const RESEND_KEY = process.env.NEXT_PUBLIC_RESEND_KEY!;
 
 export default function OnboardingProfilePage() {
-  const { user } = useUser();
+  const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
 
   const form = useForm<OnboardingProfileData>({
@@ -35,16 +32,16 @@ export default function OnboardingProfilePage() {
   });
 
   useEffect(() => {
-    if (user) {
-      form.reset({
-        name: user.name || '',
-        phoneNumber: '',
-        password: '',
-        confirmPassword: '',
-        gender: 'male',
-      });
-    }
-  }, [form, user]);
+    if (isPending || !session?.user) return;
+
+    form.reset({
+      name: session.user.name,
+      phoneNumber: '',
+      password: '',
+      confirmPassword: '',
+      gender: 'male',
+    });
+  }, [form, session?.user, isPending]);
 
   async function handleSaveProfile(data: OnboardingProfileData) {
     const res = await saveProfile(data);

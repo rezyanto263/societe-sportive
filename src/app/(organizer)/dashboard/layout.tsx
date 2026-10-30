@@ -1,8 +1,10 @@
-import DashboardHeader from '@/components/app/dashboard/header';
-import DashboardSidebar from '@/components/app/dashboard/sidebar';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import DashboardHeader from '@/shared/components/app/dashboard/header';
+import DashboardSidebar from '@/shared/components/app/dashboard/sidebar';
+import { ScrollArea } from '@/shared/components/ui/scroll-area';
+import { SidebarProvider } from '@/shared/components/ui/sidebar';
 import { cookies } from 'next/headers';
+
+export const instant = false;
 
 export default async function DashboardLayout({
   children,
@@ -10,9 +12,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const sidebarState = cookieStore.get('sidebar_state');
-
-  const defaultOpen = sidebarState?.value !== 'false';
+  const defaultOpen = cookieStore.get('sidebar_state')?.value !== 'false';
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
