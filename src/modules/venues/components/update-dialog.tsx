@@ -39,7 +39,6 @@ import { toast } from 'sonner';
 import { JSX, useState, useTransition } from 'react';
 import { Spinner } from '@/shared/components/ui/spinner';
 import CourtIcon from '@/shared/components/app/icon/court';
-import { useRouter } from 'next/navigation';
 import { Sports, Venues } from '@/core/database/types';
 import { updateVenue } from '@/modules/venues/actions/update-venue';
 
@@ -48,13 +47,12 @@ export default function UpdateVenueDialog({
   sports,
   renderTrigger,
 }: {
-  venue: Venues;
+  venue: Omit<Venues, 'medias'>;
   sports: Sports[];
   renderTrigger: JSX.Element;
 }) {
   const [open, setOpen] = useState(false);
   const [isLoading, startTransition] = useTransition();
-  const router = useRouter();
 
   const defaultValues = {
     id: venue.id,
@@ -105,7 +103,6 @@ export default function UpdateVenueDialog({
       setOpen(false);
       form.reset(defaultValues);
       toast.success(message);
-      router.refresh();
     });
   }
 

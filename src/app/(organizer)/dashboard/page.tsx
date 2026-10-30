@@ -1,6 +1,4 @@
-'use client';
-
-import { useUser } from '@/shared/components/providers/user-provider';
+import { getCurrentUser } from '@/core/auth/session';
 import {
   Avatar,
   AvatarFallback,
@@ -34,10 +32,13 @@ import {
   TrophyIcon,
   Users2Icon,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
-export default function DashboardPage() {
-  const { user } = useUser();
+export const instant = false;
+
+export default async function DashboardPage() {
+  const user = await getCurrentUser();
 
   return (
     <div className="p-6 space-y-8">
@@ -284,14 +285,19 @@ export default function DashboardPage() {
                   >
                     <Avatar>
                       <AvatarImage
-                        src={
-                          user?.image ??
-                          `https://api.dicebear.com/10.x/notionists/svg?seed=${user?.id ?? 'user'}`
+                        render={
+                          <Image
+                            src={
+                              user?.image ??
+                              `https://api.dicebear.com/10.x/notionists/svg?seed=${user?.id ?? 'user'}`
+                            }
+                            alt={user?.name ?? 'Avatar'}
+                            fill
+                          />
                         }
-                        alt={user?.name ?? 'user'}
                       />
                       <AvatarFallback>
-                        {getInitials(user?.name ?? 'User')}
+                        {getInitials(user?.name ?? '?')}
                       </AvatarFallback>
                     </Avatar>
                     <div className="leading-4">

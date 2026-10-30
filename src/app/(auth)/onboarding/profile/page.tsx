@@ -1,7 +1,6 @@
 'use client';
 
 import InputField from '@/shared/components/app/form/input-field';
-import { useUser } from '@/shared/components/providers/user-provider';
 import { Button } from '@/shared/components/ui/button';
 import { Field, FieldGroup } from '@/shared/components/ui/field';
 import saveProfile from '@/modules/auth/actions/onboarding/save-profile';
@@ -12,12 +11,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { authClient } from '@/core/auth/client';
 
 const RESEND_COOLDOWN = Number(process.env.NEXT_PUBLIC_RESEND_COOLDOWN!);
 const RESEND_KEY = process.env.NEXT_PUBLIC_RESEND_KEY!;
 
 export default function OnboardingProfilePage() {
-  const { user } = useUser();
+  const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
 
   const form = useForm<OnboardingProfileData>({
@@ -32,16 +32,16 @@ export default function OnboardingProfilePage() {
   });
 
   useEffect(() => {
-    if (user) {
-      form.reset({
-        name: user.name || '',
-        phoneNumber: '',
-        password: '',
-        confirmPassword: '',
-        gender: 'male',
-      });
-    }
-  }, [form, user]);
+    if (isPending || !session?.user) return;
+
+    form.reset({
+      name: session.user.name,
+      phoneNumber: '',
+      password: '',
+      confirmPassword: '',
+      gender: 'male',
+    });
+  }, [form, session?.user, isPending]);
 
   async function handleSaveProfile(data: OnboardingProfileData) {
     const res = await saveProfile(data);

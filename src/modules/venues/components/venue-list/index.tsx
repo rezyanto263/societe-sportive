@@ -20,21 +20,12 @@ import {
   EmptyTitle,
 } from '@/shared/components/ui/empty';
 import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from '@/shared/components/ui/input-group';
-import {
   Item,
   ItemActions,
   ItemContent,
   ItemTitle,
 } from '@/shared/components/ui/item';
 import { Separator } from '@/shared/components/ui/separator';
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from '@/shared/components/ui/toggle-group';
 import {
   Tooltip,
   TooltipContent,
@@ -53,89 +44,39 @@ import {
   InfoIcon,
   MapPinIcon,
   PhoneIcon,
-  SearchIcon,
   Trash2Icon,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { use } from 'react';
 import { formatToRupiah } from '@/shared/lib/format';
-import Image from 'next/image';
+import { Metadata } from '@/core/types/query';
 
-type ListVenuesProps = {
-  venues: Venues[];
-  sports: Sports[];
+import { ImageWithSkeleton } from '@/shared/components/app/image-with-skeleton';
+import VenuePagination from '@/modules/venues/components/venue-list/venue-pagination';
+
+type VenueListProps = {
+  venuesPromise: Promise<{
+    data: Omit<Venues, 'medias'>[];
+    metadata: Metadata;
+  }>;
+  sportsPromise: Promise<Sports[]>;
 };
 
-export default function ListVenues({ venues, sports }: ListVenuesProps) {
-  const [keyword, setKeyword] = useState('');
-  const [selectedSport, setSelectedSport] = useState<string>('all');
-
-  const filteredVenues = venues.filter((venue) => {
-    const matchesKeyword =
-      venue.name.toLowerCase().includes(keyword.toLowerCase()) ||
-      venue.address.toLowerCase().includes(keyword.toLowerCase());
-
-    const matchesSport =
-      selectedSport === 'all' || venue.sportId === selectedSport;
-
-    return matchesKeyword && matchesSport;
-  });
+export default function VenueList({
+  venuesPromise,
+  sportsPromise,
+}: VenueListProps) {
+  const { data: venues, metadata } = use(venuesPromise);
+  const sports = use(sportsPromise);
 
   return (
     <>
-      <Card>
-        <CardContent className="flex items-center gap-3 max-md:flex-wrap">
-          <InputGroup>
-            <InputGroupInput
-              placeholder="Cari nama tempat atau alamat..."
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-            />
-            <InputGroupAddon>
-              <SearchIcon />
-            </InputGroupAddon>
-            <InputGroupAddon align="inline-end">
-              {filteredVenues.length} hasil
-            </InputGroupAddon>
-          </InputGroup>
-
-          <ToggleGroup
-            value={[selectedSport]}
-            onValueChange={(value) => {
-              if (value.length > 0) {
-                setSelectedSport(value[0]);
-              }
-            }}
-            size="sm"
-            className="max-md:flex-wrap"
-          >
-            <ToggleGroupItem
-              value="all"
-              variant="outline"
-              className="cursor-pointer"
-            >
-              Semua Olahraga
-            </ToggleGroupItem>
-            {sports.map((sport) => (
-              <ToggleGroupItem
-                key={sport.id}
-                value={sport.id}
-                variant="outline"
-                className="capitalize cursor-pointer"
-              >
-                {sport.name}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-        </CardContent>
-      </Card>
-
-      {filteredVenues.length > 0 ? (
-        <div className="grid lg:grid-cols-2 gap-6">
-          {filteredVenues.map((venue) => (
+      {venues.length > 0 ? (
+        <div className="grid lg:grid-cols-2 gap-8">
+          {venues.map((venue) => (
             <Card key={venue.id} className="overflow-hidden pt-0 group">
               <div className="relative h-50 overflow-hidden">
-                <Image
+                <ImageWithSkeleton
                   src={venue.thumbnail.url}
                   alt={`Gambar utama ${venue.name}`}
                   fill
@@ -299,6 +240,8 @@ export default function ListVenues({ venues, sports }: ListVenuesProps) {
               </CardFooter>
             </Card>
           ))}
+
+          <VenuePagination metadata={metadata} />
         </div>
       ) : (
         <Empty className="mx-auto">

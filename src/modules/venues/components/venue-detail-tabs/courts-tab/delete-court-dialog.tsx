@@ -16,7 +16,6 @@ import { VenuesSchema } from '@/modules/venues/schema';
 import { DeleteCourtData } from '@/modules/venues/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Trash2Icon, XIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -32,7 +31,6 @@ export default function DeleteCourtDialog({
 }) {
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, startTransition] = useTransition();
-  const router = useRouter();
 
   const defaultValues = { id, name: '' };
 
@@ -58,7 +56,6 @@ export default function DeleteCourtDialog({
       setOpen(false);
       form.reset(defaultValues);
       toast.success(message);
-      router.refresh();
     });
   }
 

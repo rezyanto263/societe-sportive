@@ -8,6 +8,8 @@ import { APIError } from 'better-auth';
 import { isAPIError } from 'better-auth/api';
 import { and, eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
+import { updateTag } from 'next/cache';
+import { cacheTags } from '@/core/cache/tags';
 
 export async function deletePhoto({ venueId, mediaId }: DeletePhotoData) {
   try {
@@ -39,6 +41,8 @@ export async function deletePhoto({ venueId, mediaId }: DeletePhotoData) {
         .set({ deletedAt: new Date() })
         .where(eq(medias.id, mediaId));
     });
+
+    updateTag(cacheTags.venues.detail(venueId));
 
     return {
       success: true,

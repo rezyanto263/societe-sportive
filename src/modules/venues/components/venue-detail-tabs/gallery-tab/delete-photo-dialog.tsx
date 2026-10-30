@@ -18,7 +18,6 @@ import { DeletePhotoData } from '@/modules/venues/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Trash2Icon, XIcon } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { JSX, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -38,7 +37,6 @@ export default function DeletePhotoDialog({
 }: DeletePhotoDialogProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, startTransition] = useTransition();
-  const router = useRouter();
 
   const form = useForm<DeletePhotoData>({
     resolver: zodResolver(VenuesSchema.deletePhoto),
@@ -56,7 +54,6 @@ export default function DeletePhotoDialog({
 
       setOpen(false);
       toast.success(message);
-      router.refresh();
     });
   }
 

@@ -17,7 +17,6 @@ import { VenuesSchema } from '@/modules/venues/schema';
 import { CreateCourtData } from '@/modules/venues/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PlusCircleIcon, XIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -33,7 +32,6 @@ export default function CreateCourtDialog({
 }) {
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, startTransition] = useTransition();
-  const router = useRouter();
 
   const defaultValues = {
     venueId,
@@ -59,7 +57,6 @@ export default function CreateCourtDialog({
       setOpen(false);
       form.reset(defaultValues);
       toast.success(message);
-      router.refresh();
     });
   }
 

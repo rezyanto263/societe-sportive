@@ -8,6 +8,8 @@ import { APIError } from 'better-auth';
 import { isAPIError } from 'better-auth/api';
 import { and, eq, inArray, isNull, notInArray } from 'drizzle-orm';
 import { headers } from 'next/headers';
+import { updateTag } from 'next/cache';
+import { cacheTags } from '@/core/cache/tags';
 
 export async function syncPhoto({ venueId, mediaIds }: SyncPhotoData) {
   try {
@@ -66,6 +68,8 @@ export async function syncPhoto({ venueId, mediaIds }: SyncPhotoData) {
           .where(inArray(medias.id, finalMediaIds));
       }
     });
+
+    updateTag(cacheTags.venues.detail(venueId));
 
     return {
       success: true,

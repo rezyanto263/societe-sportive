@@ -4,15 +4,15 @@ import { ScrollArea } from '@/shared/components/ui/scroll-area';
 import { SidebarProvider } from '@/shared/components/ui/sidebar';
 import { cookies } from 'next/headers';
 
+export const instant = false;
+
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const sidebarState = cookieStore.get('sidebar_state');
-
-  const defaultOpen = sidebarState?.value !== 'false';
+  const defaultOpen = cookieStore.get('sidebar_state')?.value !== 'false';
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>

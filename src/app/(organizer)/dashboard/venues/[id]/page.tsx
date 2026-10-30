@@ -3,7 +3,7 @@ import { ShareVenueWhatsAppButton } from '@/modules/venues/components/share-venu
 import VenueDetailBanner from '@/modules/venues/components/venue-detail-banner';
 import VenueDetailTabs from '@/modules/venues/components/venue-detail-tabs';
 import { getVenue } from '@/modules/venues/queries/get-venue';
-import { ChevronLeftIcon, Share2Icon } from 'lucide-react';
+import { ChevronLeftIcon } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import z from 'zod';
@@ -31,6 +31,7 @@ export default async function VenueDetailPage({
             Kembali ke Daftar Tempat
           </Button>
         </Link>
+
         <ShareVenueWhatsAppButton
           name={venue.name}
           address={venue.address}

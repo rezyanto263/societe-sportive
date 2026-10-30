@@ -8,6 +8,8 @@ import { APIError } from 'better-auth';
 import { isAPIError } from 'better-auth/api';
 import { and, eq, isNull } from 'drizzle-orm';
 import { headers } from 'next/headers';
+import { updateTag } from 'next/cache';
+import { cacheTags } from '@/core/cache/tags';
 
 export async function updateVenue({
   courts: courtsData,
@@ -140,6 +142,9 @@ export async function updateVenue({
           if (court.thumbnailId) await softDeleteMedia(court.thumbnailId);
         }
       }
+
+      updateTag(cacheTags.venues.list);
+      updateTag(cacheTags.venues.detail(venueData.id));
 
       return {
         success: true,

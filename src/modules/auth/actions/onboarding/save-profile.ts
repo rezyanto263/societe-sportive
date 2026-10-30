@@ -2,7 +2,7 @@
 
 import db from '@/core/database';
 import { users } from '@/core/database/schema';
-import { getCurrentUser } from '@/modules/auth/queries/get-current-user';
+import { getCurrentUser } from '@/core/auth/session';
 import { OnboardingProfileData } from '@/modules/auth/types';
 import { auth } from '@/core/auth/server';
 import { APIError, isAPIError } from 'better-auth/api';

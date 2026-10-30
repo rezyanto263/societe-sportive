@@ -1,3 +1,4 @@
+import { ImageWithSkeleton } from '@/shared/components/app/image-with-skeleton';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,7 +15,7 @@ export default function AuthLayout({
           <div className="flex justify-center gap-2 md:justify-start">
             <Link href="/" className="flex items-center gap-2 font-bold">
               <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground overflow-hidden">
-                <Image
+                <ImageWithSkeleton
                   src="/images/logo.png"
                   alt="Logo"
                   width={24}
@@ -30,8 +31,8 @@ export default function AuthLayout({
             <div className="w-full max-w-md">{children}</div>
           </div>
         </div>
-        <div className="relative hidden bg-muted lg:block">
-          <Image
+        <div className="relative hidden bg-background lg:block">
+          <ImageWithSkeleton
             src="https://images.pexels.com/photos/38233848/pexels-photo-38233848.jpeg"
             alt="Image"
             width={800}

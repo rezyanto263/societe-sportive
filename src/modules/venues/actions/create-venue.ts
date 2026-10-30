@@ -7,6 +7,8 @@ import { auth } from '@/core/auth/server';
 import { APIError } from 'better-auth';
 import { isAPIError } from 'better-auth/api';
 import { headers } from 'next/headers';
+import { updateTag } from 'next/cache';
+import { cacheTags } from '@/core/cache/tags';
 
 export async function createVenue({
   courts: courtsData,
@@ -34,6 +36,8 @@ export async function createVenue({
       }));
 
       await tx.insert(courts).values(courtsDataMapped).returning();
+
+      updateTag(cacheTags.venues.list);
 
       return {
         success: true,

@@ -6,6 +6,8 @@ import { auth } from '@/core/auth/server';
 import { APIError, isAPIError } from 'better-auth/api';
 import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
+import { updateTag } from 'next/cache';
+import { cacheTags } from '@/core/cache/tags';
 
 export async function deleteCourt(id: string) {
   try {
@@ -15,6 +17,8 @@ export async function deleteCourt(id: string) {
     });
 
     if (!canDeleteCourt) throw new APIError('FORBIDDEN');
+
+    let venueId: string;
 
     return db.transaction(async (tx) => {
       const court = await tx.query.courts.findFirst({
@@ -26,6 +30,8 @@ export async function deleteCourt(id: string) {
           message: 'Lapangan tidak ditemukan.',
         });
       }
+
+      venueId = court.venueId;
 
       const activeCourts = await tx.query.courts.findMany({
         where: { venueId: court.venueId, deletedAt: { isNull: true } },
@@ -49,6 +55,8 @@ export async function deleteCourt(id: string) {
       } else {
         await tx.delete(courts).where(eq(courts.id, id));
       }
+
+      updateTag(cacheTags.venues.detail(venueId));
 
       return {
         success: true,

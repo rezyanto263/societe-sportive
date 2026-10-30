@@ -6,6 +6,8 @@ import { auth } from '@/core/auth/server';
 import { APIError, isAPIError } from 'better-auth/api';
 import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
+import { updateTag } from 'next/cache';
+import { cacheTags } from '@/core/cache/tags';
 
 export async function deleteVenue(id: string) {
   try {
@@ -32,6 +34,8 @@ export async function deleteVenue(id: string) {
         .update(courts)
         .set({ deletedAt: new Date() })
         .where(eq(courts.venueId, id));
+
+      updateTag(cacheTags.venues.list);
 
       return {
         success: true,

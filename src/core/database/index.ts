@@ -1,3 +1,4 @@
+import 'server-only';
 import relations from '@/core/database/relations';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';

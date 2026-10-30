@@ -19,7 +19,6 @@ import { VenuesSchema } from '@/modules/venues/schema';
 import { SyncPhotoData } from '@/modules/venues/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SaveIcon, XIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { JSX, useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -39,7 +38,6 @@ export default function ManagePhotoDialog({
 }: ManagePhotoDialogProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, startTransition] = useTransition();
-  const router = useRouter();
 
   const defaultValues = {
     venueId,
@@ -63,7 +61,6 @@ export default function ManagePhotoDialog({
       setOpen(false);
       form.reset(defaultValues);
       toast.success(message);
-      router.refresh();
     });
   }
 

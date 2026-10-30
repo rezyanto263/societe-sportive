@@ -1,20 +1,16 @@
 'use client';
 
 import InputField from '@/shared/components/app/form/input-field';
-import { PhoneInput } from '@/shared/components/app/form/phone-input';
 import { Button } from '@/shared/components/ui/button';
 import {
   Field,
   FieldDescription,
-  FieldError,
   FieldGroup,
-  FieldLabel,
 } from '@/shared/components/ui/field';
 import requestPasswordReset from '@/modules/auth/actions/reset-password/request-password-reset';
 import { AuthSchema } from '@/modules/auth/schema';
 import { RequestPasswordResetData } from '@/modules/auth/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircleIcon, InfoIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
@@ -69,31 +65,6 @@ export default function RequestPasswordResetPage() {
               type="tel"
               required
             />
-            // <Field data-invalid={fieldState.invalid}>
-            //   <FieldLabel htmlFor="phoneNumber">
-            //     Nomor Ponsel <span className="text-destructive">*</span>
-            //   </FieldLabel>
-            //   <PhoneInput
-            //     {...field}
-            //     aria-invalid={fieldState.invalid}
-            //     defaultCountry="ID"
-            //   />
-            //   {fieldState.invalid && (
-            //     <div className="flex items-center gap-2">
-            //       <AlertCircleIcon className="text-destructive" size={14} />
-            //       <FieldError errors={[fieldState.error]} />
-            //     </div>
-            //   )}
-            //   <div className="flex items-center gap-2">
-            //     <InfoIcon
-            //       className="text-muted-foreground shrink-0"
-            //       size={14}
-            //     />
-            //     <FieldDescription>
-            //       Nomor ponsel harus valid dan dapat dihubungi.
-            //     </FieldDescription>
-            //   </div>
-            // </Field>
           )}
         />
         <Field>

@@ -260,16 +260,11 @@ function InputComponent<T extends FieldValues, N extends FieldPath<T>>(
         />
       );
 
-    case 'text':
+    default:
       return props.secret ? (
         <SecretInput {...field} aria-invalid={invalid} />
       ) : (
         <Input {...field} type="text" aria-invalid={invalid} />
-      );
-
-    default:
-      return (
-        <Input {...field} type={props.type ?? 'text'} aria-invalid={invalid} />
       );
   }
 }

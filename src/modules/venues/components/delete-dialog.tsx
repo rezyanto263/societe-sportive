@@ -61,7 +61,6 @@ export default function DeleteVenueDialog({
       setOpen(false);
       form.reset(defaultValues);
       toast.success(message);
-      router.refresh();
     });
   }
 

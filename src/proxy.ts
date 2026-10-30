@@ -10,11 +10,11 @@ export default async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const handlers: ProxyHandler[] = [onboardingProxyHandler];
 
-  if (pathname.startsWith('/dashboard')) handlers.push(organizerProxyHandler);
-
   if (matchesRoute(pathname, guestRoutes)) handlers.push(guestProxyHandler);
-
+  
   if (matchesRoute(pathname, authRoutes)) handlers.push(authProxyHandler);
+  
+  if (pathname.startsWith('/dashboard')) handlers.push(organizerProxyHandler);
 
   return runProxyChain(req, handlers);
 }

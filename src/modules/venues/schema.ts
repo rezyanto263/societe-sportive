@@ -1,4 +1,5 @@
-import { isValidPhoneNumber } from 'react-phone-number-input';
+import { SPORTS } from '@/modules/sports/constants';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 import z from 'zod';
 
 export class VenuesSchema {
@@ -146,5 +147,15 @@ export class VenuesSchema {
           ? 'ID foto harus diisi.'
           : 'ID foto tidak valid.',
     }),
+  });
+
+  static searchParams = z.object({
+    keyword: z.string().max(100).optional(),
+    sport: z.enum([SPORTS.BADMINTON, SPORTS.BASKETBALL]).optional(),
+    page: z.coerce.number().int().positive().optional().default(1),
+    limit: z
+      .union([z.literal(10), z.literal(25), z.literal(50), z.literal(100)])
+      .optional()
+      .default(10),
   });
 }

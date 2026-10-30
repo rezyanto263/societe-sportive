@@ -36,14 +36,14 @@ import { ScrollArea } from '@/shared/components/ui/scroll-area';
 import { Kbd } from '@/shared/components/ui/kbd';
 import { createVenue } from '@/modules/venues/actions/create-venue';
 import { toast } from 'sonner';
-import { useState, useTransition } from 'react';
+import { use, useState, useTransition } from 'react';
 import { Spinner } from '@/shared/components/ui/spinner';
 import CourtIcon from '@/shared/components/app/icon/court';
 import { useRouter } from 'next/navigation';
-import ImageInput from '@/shared/components/app/form/image-input';
 import { cleanupPendingMedia } from '@/modules/medias/actions/cleanup-pending-media';
 
-export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
+export default function CreateVenueDialog({ sportsPromise }: { sportsPromise: Promise<Sports[]> }) {
+  const sports = use(sportsPromise);
   const [open, setOpen] = useState(false);
   const [isLoading, startTransition] = useTransition();
   const router = useRouter();
@@ -96,7 +96,6 @@ export default function CreateVenueDialog({ sports }: { sports: Sports[] }) {
       setOpen(false);
       form.reset(defaultValues);
       toast.success(message);
-      router.refresh();
     });
   }
 

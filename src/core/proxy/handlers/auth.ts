@@ -1,16 +1,16 @@
-import { auth } from '@/core/auth/server';
 import { ProxyContext } from '@/core/proxy/utils';
-import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-export default async function authProxyHandler({ request }: ProxyContext) {
-  const session = await auth.api.getSession({ headers: await headers() });
+export default async function authProxyHandler({
+  request,
+  user,
+}: ProxyContext) {
   const url = new URL(
     `/sign-in?callbackUrl=${encodeURIComponent(request.url)}`,
     request.nextUrl.origin,
   ).href;
 
-  if (!session) return NextResponse.redirect(url);
+  if (!user) return NextResponse.redirect(url);
 
   return null;
 }

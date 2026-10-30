@@ -58,7 +58,7 @@ export default function SidebarNavItem({
     return (
       <SidebarMenuItem>
         <SidebarMenuButton
-          render={<Link href={navItem.href!} onClick={handleSidebarMobile} />}
+          render={<Link href={navItem.href!} onClick={handleSidebarMobile} prefetch={true} />}
           isActive={pathname === navItem.href}
           tooltip={navItem.title}
         >
@@ -95,7 +95,7 @@ export default function SidebarNavItem({
               )}
               key={subItem.href}
               render={
-                <Link href={subItem.href} onClick={handleSidebarMobile} />
+                <Link href={subItem.href} onClick={handleSidebarMobile} prefetch={true} />
               }
             >
               {subItem.title}
@@ -130,7 +130,7 @@ export default function SidebarNavItem({
             <SidebarMenuSubItem key={subItem.href}>
               <SidebarMenuSubButton
                 render={
-                  <Link href={subItem.href} onClick={handleSidebarMobile} />
+                  <Link href={subItem.href} onClick={handleSidebarMobile} prefetch={true} />
                 }
                 isActive={pathname === subItem.href}
               >

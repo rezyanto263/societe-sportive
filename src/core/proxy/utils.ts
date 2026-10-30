@@ -1,7 +1,6 @@
 import { User } from '@/modules/auth/types';
-import { auth } from '@/core/auth/server';
-import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { getCurrentUser } from '@/core/auth/session';
 
 export type ProxyContext = {
   request: NextRequest;
@@ -15,13 +14,11 @@ export async function runProxyChain(
   request: NextRequest,
   handlers: ProxyHandler[],
 ) {
-  const data = await auth.api.getSession({ headers: await headers() });
+  const user = await getCurrentUser();
   const ctx: ProxyContext = {
     request,
-    response: NextResponse.next({
-      request,
-    }),
-    user: data?.user,
+    response: NextResponse.next({ request }),
+    user,
   };
 
   for (const handler of handlers) {

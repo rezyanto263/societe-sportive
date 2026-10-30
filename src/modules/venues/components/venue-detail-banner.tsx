@@ -118,18 +118,17 @@ export default function VenueDetailBanner({ venue }: { venue: Venues }) {
           </span>
         </div>
 
-        <div className="absolute top-4 left-4 z-2 inline-flex items-center gap-3">
-          <Badge className="capitalize">
-            <SportIcon sportName={venue.sport.name as Sport} />
-            {venue.sport.name}
-          </Badge>
-          <Badge className="capitalize" variant="secondary">
-            <CourtIcon />
-            {venue.courts.length} Lapangan
-          </Badge>
-        </div>
-
-        <div className="absolute top-4 right-4 z-2 inline-flex items-center gap-3">
+        <div className="absolute top-4 left-4 right-4 z-2 flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap">
+            <Badge className="capitalize">
+              <SportIcon sportName={venue.sport.name as Sport} />
+              {venue.sport.name}
+            </Badge>
+            <Badge className="capitalize" variant="secondary">
+              <CourtIcon />
+              {venue.courts.length} Lapangan
+            </Badge>
+          </div>
           <Badge variant="secondary">
             {formatToRupiah(Number(venue.fee))} / jam
           </Badge>

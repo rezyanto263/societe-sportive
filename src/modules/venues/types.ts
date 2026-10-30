@@ -9,5 +9,6 @@ export type CreateCourtData = z.infer<typeof VenuesSchema.createCourt>;
 export type DeleteCourtData = z.infer<typeof VenuesSchema.deleteCourt>;
 export type SyncPhotoData = z.infer<typeof VenuesSchema.syncPhoto>;
 export type DeletePhotoData = z.infer<typeof VenuesSchema.deletePhoto>;
+export type SearchVenueParamsData = z.infer<typeof VenuesSchema.searchParams>;
 
 export type VenueTab = (typeof VENUE_TABS)[number];
