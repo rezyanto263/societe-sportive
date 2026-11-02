@@ -5,4 +5,8 @@ export const cacheTags = {
     list: 'venues:list',
     detail: (id: string) => `venues:${id}`,
   },
+  paymentAccounts: {
+    list: 'payment-accounts:list',
+    detail: (id: string) => `payment-accounts:${id}`,
+  },
 } as const;
