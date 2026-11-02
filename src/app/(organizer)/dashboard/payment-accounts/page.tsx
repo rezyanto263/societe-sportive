@@ -1,8 +1,7 @@
 import CreatePaymentAccountDialog from '@/modules/payment-accounts/components/create-dialog';
 import RefreshButton from '@/shared/components/app/refresh-button';
-import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
-import { CreditCardIcon, PlusCircleIcon } from 'lucide-react';
+import { CreditCardIcon } from 'lucide-react';
 
 export default function PaymentAccountsPage() {
   return (
