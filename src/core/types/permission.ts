@@ -1,4 +1,5 @@
-import { statements } from '@/shared/lib/permission';
+import { statements } from "@/core/config/permission";
+
 
 export type Statement = typeof statements;
 
