@@ -18,6 +18,7 @@ export const paymentAccounts = snakeCase.table('payment_accounts', {
   accountHolderName: text().notNull(),
   imageId: uuid().references(() => medias.id, { onDelete: 'set null' }),
   bookmark: boolean().default(false),
+  notes: text(),
   ...softDelete,
   ...timestamps,
 });
