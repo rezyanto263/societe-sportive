@@ -39,14 +39,12 @@ import { toast } from 'sonner';
 import { use, useState, useTransition } from 'react';
 import { Spinner } from '@/shared/components/ui/spinner';
 import CourtIcon from '@/shared/components/app/icon/court';
-import { useRouter } from 'next/navigation';
 import { cleanupPendingMedia } from '@/modules/medias/actions/cleanup-pending-media';
 
 export default function CreateVenueDialog({ sportsPromise }: { sportsPromise: Promise<Sports[]> }) {
   const sports = use(sportsPromise);
   const [open, setOpen] = useState(false);
   const [isLoading, startTransition] = useTransition();
-  const router = useRouter();
 
   const defaultValues = {
     thumbnailId: '',
@@ -84,7 +82,7 @@ export default function CreateVenueDialog({ sportsPromise }: { sportsPromise: Pr
     }
   }
 
-  async function handleCreate(data: CreateVenueData) {
+  function handleCreate(data: CreateVenueData) {
     startTransition(async () => {
       const { success, message } = await createVenue(data);
 

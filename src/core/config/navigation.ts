@@ -42,14 +42,14 @@ export const dashboardNavigation: NavigationType = [
         icon: QrCodeIcon,
       },
       {
-        title: 'Tempat & Lapangan',
-        href: '/dashboard/venues',
-        icon: MapPinnedIcon,
-      },
-      {
         title: 'Anggota',
         href: '/dashboard/members',
         icon: Users2Icon,
+      },
+      {
+        title: 'Tempat & Lapangan',
+        href: '/dashboard/venues',
+        icon: MapPinnedIcon,
       },
       {
         title: 'Rekening Pembayaran',

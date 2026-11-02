@@ -17,6 +17,8 @@ import { PhoneInput } from '@/shared/components/app/form/phone-input';
 import { RichTextInput } from '@/shared/components/app/form/rich-text-input';
 import SecretInput from '@/shared/components/app/form/secret-input';
 import { TagsInput } from '@/shared/components/app/form/tags-input';
+import { Textarea } from '@/shared/components/ui/textarea';
+import { Checkbox } from '@/shared/components/ui/checkbox';
 
 import { AlertCircleIcon, InfoIcon, MarsIcon, VenusIcon } from 'lucide-react';
 
@@ -28,6 +30,7 @@ import type {
   FieldPath,
   FieldValues,
 } from 'react-hook-form';
+import { cn } from '@/shared/lib/utils';
 
 // --------------------------------------------------
 // Input types
@@ -41,6 +44,8 @@ type InputFieldType =
   | 'currency'
   | 'tags'
   | 'richtext'
+  | 'textarea'
+  | 'checkbox'
   | 'image';
 
 // --------------------------------------------------
@@ -53,6 +58,8 @@ type InputComponentMap = {
   currency: typeof CurrencyInput;
   tags: typeof TagsInput;
   richtext: typeof RichTextInput;
+  textarea: typeof Textarea;
+  checkbox: typeof Checkbox;
   image: typeof ImageInput;
 };
 
@@ -104,7 +111,7 @@ type CustomInputProps = {
   };
 }[keyof InputComponentMap];
 
-type InputFieldProps<
+export type InputFieldProps<
   T extends FieldValues,
   N extends FieldPath<T>,
 > = InputFieldBaseProps<T, N> &
@@ -139,9 +146,18 @@ export default function InputField<
 
   const type = props.type ?? 'text';
 
+  const isCheckbox = type === 'checkbox';
+
   return (
-    <Field data-invalid={fieldState.invalid}>
-      <FieldLabel htmlFor={field.name}>
+    <Field
+      data-invalid={fieldState.invalid}
+      orientation={isCheckbox ? 'horizontal' : 'vertical'}
+      className={cn(isCheckbox && 'inline-flex w-auto')}
+    >
+      <FieldLabel
+        htmlFor={field.name}
+        className={cn(isCheckbox && 'cursor-pointer order-2')}
+      >
         {label}
         {required && <span className="text-destructive"> *</span>}
       </FieldLabel>
@@ -257,6 +273,20 @@ function InputComponent<T extends FieldValues, N extends FieldPath<T>>(
           value={field.value}
           onChange={field.onChange}
           aria-invalid={invalid}
+        />
+      );
+
+    case 'textarea':
+      return <Textarea {...field} aria-invalid={invalid} />;
+
+    case 'checkbox':
+      return (
+        <Checkbox
+          {...props.componentProps}
+          checked={field.value}
+          onCheckedChange={field.onChange}
+          aria-invalid={invalid}
+          className={cn(props.componentProps?.className, 'cursor-pointer')}
         />
       );
 

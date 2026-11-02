@@ -1,4 +1,10 @@
-import { courts, medias, sports, venues } from '@/core/database/schema';
+import {
+  courts,
+  medias,
+  paymentAccounts,
+  sports,
+  venues,
+} from '@/core/database/schema';
 import { Prettify } from 'better-auth';
 
 export type Sports = typeof sports.$inferSelect;
@@ -14,3 +20,4 @@ export type Venues = Prettify<
     medias: Medias[];
   }
 >;
+export type PaymentAccounts = typeof paymentAccounts.$inferSelect;
