@@ -6,6 +6,7 @@ export const paymentAccountTypes = pgEnum('payment_account_types', [
   'bank',
   'qris',
   'e-wallet',
+  'cash',
 ]);
 
 export const paymentAccounts = snakeCase.table('payment_accounts', {

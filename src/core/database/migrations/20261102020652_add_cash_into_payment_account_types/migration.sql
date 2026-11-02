@@ -1,0 +1,1 @@
+ALTER TYPE "payment_account_types" ADD VALUE 'cash';
