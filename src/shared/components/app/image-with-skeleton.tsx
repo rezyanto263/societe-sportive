@@ -1,17 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, type ComponentProps } from 'react';
+import { useEffect, useRef, useState, type ComponentProps } from 'react';
 
 import { Skeleton } from '@/shared/components/ui/skeleton';
 import { cn } from '@/shared/lib/utils';
 
 type Props = ComponentProps<typeof Image> & {
-  /** Class untuk wrapper (div pembungkus) */
   containerClassName?: string;
-  /** Class untuk skeleton loading */
   skeletonClassName?: string;
-  /** Matikan skeleton jika tidak diperlukan */
   withSkeleton?: boolean;
 };
 
@@ -25,7 +22,16 @@ export function ImageWithSkeleton({
   onError,
   ...props
 }: Props) {
+  const imageRef = useRef<HTMLImageElement>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const image = imageRef.current;
+
+    if (image?.complete) {
+      setIsLoading(false);
+    }
+  }, []);
 
   return (
     <div
@@ -42,10 +48,8 @@ export function ImageWithSkeleton({
 
       <Image
         {...props}
+        ref={imageRef}
         alt={alt}
-        ref={(img) => {
-          if (img?.complete) setIsLoading(false);
-        }}
         className={cn(
           'transition-opacity duration-300',
           withSkeleton && isLoading ? 'opacity-0' : 'opacity-100',

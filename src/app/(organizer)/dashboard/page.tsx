@@ -285,16 +285,11 @@ export default async function DashboardPage() {
                   >
                     <Avatar>
                       <AvatarImage
-                        render={
-                          <Image
-                            src={
-                              user?.image ??
-                              `https://api.dicebear.com/10.x/notionists/svg?seed=${user?.id ?? 'user'}`
-                            }
-                            alt={user?.name ?? 'Avatar'}
-                            fill
-                          />
+                        src={
+                          user?.image ??
+                          `https://api.dicebear.com/10.x/notionists/svg?seed=${user?.id ?? 'user'}`
                         }
+                        alt={user?.name ?? 'Avatar'}
                       />
                       <AvatarFallback>
                         {getInitials(user?.name ?? '?')}

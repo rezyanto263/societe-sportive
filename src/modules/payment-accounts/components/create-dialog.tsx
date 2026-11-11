@@ -25,7 +25,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export default function CreatePaymentAccountDialog() {
-  const [open, setOpen] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
   const [isLoading, startTransition] = useTransition();
 
   const defaultValues = {
