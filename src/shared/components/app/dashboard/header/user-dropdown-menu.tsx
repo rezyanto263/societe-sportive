@@ -2,7 +2,6 @@
 
 import signOut from '@/modules/auth/actions/sign-out';
 import { User } from '@/modules/auth/types';
-import { ImageWithSkeleton } from '@/shared/components/app/image-with-skeleton';
 import {
   Avatar,
   AvatarFallback,
@@ -42,16 +41,11 @@ export default function UserDropdownMenu({
           <Button variant="ghost" size="icon" className="cursor-pointer">
             <Avatar>
               <AvatarImage
-                render={
-                  <ImageWithSkeleton
-                    src={
-                      user?.image ??
-                      `https://api.dicebear.com/10.x/notionists/svg?seed=${user?.id ?? 'user'}`
-                    }
-                    alt={user?.name ?? 'Avatar'}
-                    fill
-                  />
+                src={
+                  user?.image ??
+                  `https://api.dicebear.com/10.x/notionists/svg?seed=${user?.id ?? 'user'}`
                 }
+                alt={user?.name ?? 'Avatar'}
               />
               <AvatarFallback>{getInitials(user?.name ?? '?')}</AvatarFallback>
             </Avatar>
