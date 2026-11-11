@@ -40,4 +40,26 @@ export class PaymentAccountsSchema {
         });
       }
     });
+
+  static searchParams = z.object({
+    keyword: z.string().max(100).optional(),
+    type: z
+      .enum([
+        PAYMENT_ACCOUNT_TYPES.BANK,
+        PAYMENT_ACCOUNT_TYPES.QRIS,
+        PAYMENT_ACCOUNT_TYPES.E_WALLET,
+        PAYMENT_ACCOUNT_TYPES.CASH,
+      ])
+      .optional(),
+    page: z.coerce.number().int().positive().optional().default(1),
+    limit: z
+      .union([z.literal(10), z.literal(25), z.literal(50), z.literal(100)])
+      .optional()
+      .default(10),
+  });
+
+  static bookmark = z.object({
+    id: z.uuid(),
+    bookmark: z.boolean(),
+  })
 }

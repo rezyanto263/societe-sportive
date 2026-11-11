@@ -62,6 +62,10 @@ export const relations = defineRelations(schema, (r) => ({
   },
 
   paymentAccounts: {
+    image: r.one.medias({
+      from: r.paymentAccounts.imageId,
+      to: r.medias.id,
+    }),
     matches: r.many.matches({
       from: r.paymentAccounts.id.through(
         r.matchPaymentAccounts.paymentAccountId,

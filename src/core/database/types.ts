@@ -20,4 +20,8 @@ export type Venues = Prettify<
     medias: Medias[];
   }
 >;
-export type PaymentAccounts = typeof paymentAccounts.$inferSelect;
+export type PaymentAccounts = Prettify<
+  typeof paymentAccounts.$inferSelect & {
+    image: Medias;
+  }
+>;

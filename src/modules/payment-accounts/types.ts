@@ -8,3 +8,9 @@ export type PaymentAccountType =
 export type CreatePaymentAccountData = z.infer<
   typeof PaymentAccountsSchema.create
 >;
+export type SearchPaymentAccountParamsData = z.infer<
+  typeof PaymentAccountsSchema.searchParams
+>;
+export type BookmarkPaymentAccountData = z.infer<
+  typeof PaymentAccountsSchema.bookmark
+>;

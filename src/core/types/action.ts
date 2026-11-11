@@ -1,8 +1,8 @@
-export type ActionResult<T> =
+export type ActionResult<T = unknown> =
   | {
       success: true;
       message: string;
-      data: T;
+      data?: T;
     }
   | {
       success: false;

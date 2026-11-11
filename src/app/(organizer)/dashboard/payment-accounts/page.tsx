@@ -1,9 +1,49 @@
 import CreatePaymentAccountDialog from '@/modules/payment-accounts/components/create-dialog';
+import PaymentAccountFilters from '@/modules/payment-accounts/components/payment-account-filters';
+import PaymentAccountFiltersSkeleton from '@/modules/payment-accounts/components/payment-account-filters/skeleton';
+import PaymentAccountList from '@/modules/payment-accounts/components/payment-account-list';
+import PaymentAccountListSkeleton from '@/modules/payment-accounts/components/payment-account-list/skeleton';
+import PaymentAccountStats from '@/modules/payment-accounts/components/payment-account-stats';
+import PaymentAccountStatsSkeleton from '@/modules/payment-accounts/components/payment-account-stats/skeleton';
+import { getPaymentAccounts } from '@/modules/payment-accounts/queries/get-payment-accounts';
+import { PaymentAccountsSchema } from '@/modules/payment-accounts/schema';
 import RefreshButton from '@/shared/components/app/refresh-button';
 import { Card } from '@/shared/components/ui/card';
 import { CreditCardIcon } from 'lucide-react';
+import { Suspense } from 'react';
 
-export default function PaymentAccountsPage() {
+type Props = {
+  searchParams: Promise<{
+    keyword?: string;
+    type?: string;
+    page?: string;
+    limit?: string;
+  }>;
+};
+
+export const instant = false;
+
+export default async function PaymentAccountsPage({ searchParams }: Props) {
+  const { page, limit, ...params } = await searchParams;
+
+  const search = PaymentAccountsSchema.searchParams.safeParse({
+    page: Number(page ?? 1),
+    limit: Number(limit ?? 10),
+    ...params,
+  });
+
+  const filters = search.success
+    ? search.data
+    : PaymentAccountsSchema.searchParams.parse({});
+
+  const queryString = new URLSearchParams({
+    ...filters,
+    page: String(filters.page),
+    limit: String(filters.limit),
+  }).toString();
+
+  const paymentAccountsPromise = getPaymentAccounts(filters);
+
   return (
     <div className="p-6 space-y-8">
       <Card className="p-6 flex-row justify-between max-lg:flex-col">
@@ -27,6 +67,21 @@ export default function PaymentAccountsPage() {
           <CreatePaymentAccountDialog />
         </div>
       </Card>
+
+      <Suspense fallback={<PaymentAccountStatsSkeleton />}>
+        <PaymentAccountStats />
+      </Suspense>
+
+      <Suspense fallback={<PaymentAccountFiltersSkeleton />}>
+        <PaymentAccountFilters
+          paymentAccountsPromise={paymentAccountsPromise}
+          queryString={queryString}
+        />
+      </Suspense>
+
+      <Suspense fallback={<PaymentAccountListSkeleton />}>
+        <PaymentAccountList paymentAccountsPromise={paymentAccountsPromise} />
+      </Suspense>
     </div>
   );
 }

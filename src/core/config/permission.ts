@@ -14,7 +14,7 @@ export const statements = {
     'create-matchmaking',
   ],
   venues: ['create', 'list', 'read', 'update', 'delete'],
-  paymentAccounts: ['create', 'list', 'read', 'update', 'delete'],
+  paymentAccounts: ['create', 'list', 'read', 'update', 'delete', 'bookmark'],
   members: ['create', 'list', 'read', 'update', 'delete'],
   profile: ['read', 'update'],
 } as const;
@@ -40,7 +40,7 @@ export const organizer = ac.newRole({
     'create-matchmaking',
   ],
   venues: ['create', 'list', 'read', 'update', 'delete'],
-  paymentAccounts: ['create', 'list', 'read', 'update', 'delete'],
+  paymentAccounts: ['create', 'list', 'read', 'update', 'delete', 'bookmark'],
   members: ['create', 'list', 'read', 'update', 'delete'],
   profile: ['read', 'update'],
 });
