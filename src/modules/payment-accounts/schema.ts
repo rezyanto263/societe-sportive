@@ -41,6 +41,10 @@ export class PaymentAccountsSchema {
       }
     });
 
+  static update = PaymentAccountsSchema.create.safeExtend({
+    id: z.uuid(),
+  })
+
   static searchParams = z.object({
     keyword: z.string().max(100).optional(),
     type: z

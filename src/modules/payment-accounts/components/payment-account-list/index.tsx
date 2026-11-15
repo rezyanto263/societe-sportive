@@ -3,6 +3,8 @@
 import { PaymentAccounts } from '@/core/database/types';
 import { Metadata } from '@/core/types/query';
 import { bookmarkPaymentAccount } from '@/modules/payment-accounts/actions/bookmark-payment-account';
+import PaymentAccountPagination from '@/modules/payment-accounts/components/payment-account-list/payment-account-pagination';
+import UpdatePaymentAccountDialog from '@/modules/payment-accounts/components/update-dialog';
 import { PAYMENT_ACCOUNT_TYPES } from '@/modules/payment-accounts/constants';
 import { PaymentAccountsSchema } from '@/modules/payment-accounts/schema';
 import { BookmarkPaymentAccountData } from '@/modules/payment-accounts/types';
@@ -34,11 +36,10 @@ import {
   Edit2Icon,
   ExternalLinkIcon,
   QrCodeIcon,
-  StarIcon,
   Trash2Icon,
 } from 'lucide-react';
 import Link from 'next/link';
-import { use } from 'react';
+import { use, useOptimistic, useTransition } from 'react';
 import { toast } from 'sonner';
 
 type Props = {
@@ -49,7 +50,18 @@ type Props = {
 };
 
 export default function PaymentAccountList({ paymentAccountsPromise }: Props) {
-  const { data: paymentAccounts } = use(paymentAccountsPromise);
+  const { data: paymentAccounts, metadata } = use(paymentAccountsPromise);
+  const [isBookmarkPending, startBookmarkTransition] = useTransition();
+
+  const [optimisticBookmarks, setOptimisticBookmarks] = useOptimistic(
+    paymentAccounts,
+    (state, updated: BookmarkPaymentAccountData) =>
+      state.map((account) =>
+        account.id === updated.id
+          ? { ...account, bookmark: updated.bookmark }
+          : account,
+      ),
+  );
 
   if (paymentAccounts.length === 0) {
     return (
@@ -73,20 +85,30 @@ export default function PaymentAccountList({ paymentAccountsPromise }: Props) {
   async function handleBookmark(data: BookmarkPaymentAccountData) {
     const parsed = PaymentAccountsSchema.bookmark.safeParse(data);
 
-    if (!parsed.success) return toast.error('Terjadi kesalahan.');
-
-    const result = await bookmarkPaymentAccount(parsed.data);
-
-    if (!result.success) {
-      toast.error(result.message);
+    if (!parsed.success) {
+      toast.error('Terjadi kesalahan.');
+      return;
     }
 
-    toast.success(result.message);
+    try {
+      setOptimisticBookmarks(parsed.data);
+
+      const result = await bookmarkPaymentAccount(parsed.data);
+
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+
+      toast.success(result.message);
+    } catch {
+      toast.error('Terjadi kesalahan saat memperbarui markah.');
+    }
   }
 
   return (
-    <div className="grid lg:grid-cols-2 gap-6">
-      {paymentAccounts.map((paymentAccount) => (
+    <div className="grid lg:grid-cols-2 gap-8">
+      {optimisticBookmarks.map((paymentAccount) => (
         <Card key={paymentAccount.id} className="pb-0">
           <CardHeader className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -102,13 +124,18 @@ export default function PaymentAccountList({ paymentAccountsPromise }: Props) {
             </div>
 
             <div className="flex items-center gap-3">
-              <Button
-                size="icon-xs"
-                variant="secondary"
-                className="cursor-pointer"
-              >
-                <Edit2Icon />
-              </Button>
+              <UpdatePaymentAccountDialog
+                paymentAccount={paymentAccount}
+                renderTrigger={
+                  <Button
+                    size="icon-xs"
+                    variant="secondary"
+                    className="cursor-pointer"
+                  >
+                    <Edit2Icon />
+                  </Button>
+                }
+              />
               <Button
                 size="icon-xs"
                 variant="secondary"
@@ -171,11 +198,13 @@ export default function PaymentAccountList({ paymentAccountsPromise }: Props) {
                   <QrCodeIcon className="size-5" />
                   Kode QRIS tersedia
                 </span>
-                <Link href={paymentAccount.image.url} target="_blank">
-                  <Button variant="link" size="sm" className="cursor-pointer">
-                    Lihat QRIS <ExternalLinkIcon />
-                  </Button>
-                </Link>
+                {paymentAccount.image?.url && (
+                  <Link href={paymentAccount.image.url} target="_blank">
+                    <Button variant="link" size="sm" className="cursor-pointer">
+                      Lihat QRIS <ExternalLinkIcon />
+                    </Button>
+                  </Link>
+                )}
               </div>
             )}
           </CardContent>
@@ -184,11 +213,14 @@ export default function PaymentAccountList({ paymentAccountsPromise }: Props) {
               className="cursor-pointer"
               size="sm"
               pressed={paymentAccount.bookmark}
-              onPressedChange={async () =>
-                handleBookmark({
-                  id: paymentAccount.id,
-                  bookmark: !paymentAccount.bookmark,
-                })
+              disabled={isBookmarkPending}
+              onPressedChange={() =>
+                startBookmarkTransition(() =>
+                  handleBookmark({
+                    id: paymentAccount.id,
+                    bookmark: !paymentAccount.bookmark,
+                  }),
+                )
               }
             >
               <BookmarkIcon
@@ -206,6 +238,8 @@ export default function PaymentAccountList({ paymentAccountsPromise }: Props) {
           </CardFooter>
         </Card>
       ))}
+
+      <PaymentAccountPagination metadata={metadata} />
     </div>
   );
 }
