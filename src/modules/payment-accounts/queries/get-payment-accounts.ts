@@ -34,7 +34,7 @@ export async function getPaymentAccounts({
         ...(type && { type }),
         deletedAt: { isNull: true },
       },
-      orderBy: { name: 'asc', id: 'asc' },
+      orderBy: { name: 'asc', bookmark: 'desc' },
       offset: (page - 1) * limit,
       limit,
     }),
