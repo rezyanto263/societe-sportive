@@ -22,6 +22,6 @@ export type Venues = Prettify<
 >;
 export type PaymentAccounts = Prettify<
   typeof paymentAccounts.$inferSelect & {
-    image: Medias;
+    image: Medias | null;
   }
 >;
