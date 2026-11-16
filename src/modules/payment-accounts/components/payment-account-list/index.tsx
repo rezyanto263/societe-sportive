@@ -3,6 +3,7 @@
 import { PaymentAccounts } from '@/core/database/types';
 import { Metadata } from '@/core/types/query';
 import { bookmarkPaymentAccount } from '@/modules/payment-accounts/actions/bookmark-payment-account';
+import DeletePaymentAccountDialog from '@/modules/payment-accounts/components/delete-dialog';
 import PaymentAccountPagination from '@/modules/payment-accounts/components/payment-account-list/payment-account-pagination';
 import UpdatePaymentAccountDialog from '@/modules/payment-accounts/components/update-dialog';
 import { PAYMENT_ACCOUNT_TYPES } from '@/modules/payment-accounts/constants';
@@ -136,13 +137,19 @@ export default function PaymentAccountList({ paymentAccountsPromise }: Props) {
                   </Button>
                 }
               />
-              <Button
-                size="icon-xs"
-                variant="secondary"
-                className="cursor-pointer"
-              >
-                <Trash2Icon />
-              </Button>
+              <DeletePaymentAccountDialog
+                id={paymentAccount.id}
+                name={paymentAccount.name}
+                renderTrigger={
+                  <Button
+                    size="icon-xs"
+                    variant="secondary"
+                    className="cursor-pointer"
+                  >
+                    <Trash2Icon />
+                  </Button>
+                }
+              />
             </div>
           </CardHeader>
           <CardContent className="space-y-3">

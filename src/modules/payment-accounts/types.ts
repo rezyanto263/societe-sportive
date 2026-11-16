@@ -17,3 +17,6 @@ export type SearchPaymentAccountParamsData = z.infer<
 export type BookmarkPaymentAccountData = z.infer<
   typeof PaymentAccountsSchema.bookmark
 >;
+export type DeletePaymentAccountData = z.infer<
+  typeof PaymentAccountsSchema.delete
+>;

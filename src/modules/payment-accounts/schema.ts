@@ -43,7 +43,7 @@ export class PaymentAccountsSchema {
 
   static update = PaymentAccountsSchema.create.safeExtend({
     id: z.uuid(),
-  })
+  });
 
   static searchParams = z.object({
     keyword: z.string().max(100).optional(),
@@ -63,7 +63,25 @@ export class PaymentAccountsSchema {
   });
 
   static bookmark = z.object({
-    id: z.uuid(),
+    id: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID rekening pembayaran harus diisi.'
+          : 'ID rekening pembayaran tidak valid.',
+    }),
     bookmark: z.boolean(),
-  })
+  });
+
+  static delete = z.object({
+    id: z.uuid({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? 'ID rekening pembayaran harus diisi.'
+          : 'ID rekening pembayaran tidak valid.',
+    }),
+    name: z
+      .string()
+      .max(100, 'Konfirmasi nama rekening maksimal 100 karakter.')
+      .nonempty('Konfirmasi nama rekening harus diisi.'),
+  });
 }
