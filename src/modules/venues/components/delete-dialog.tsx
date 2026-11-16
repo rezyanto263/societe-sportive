@@ -18,11 +18,11 @@ import { VenuesSchema } from '@/modules/venues/schema';
 import { DeleteVenueData } from '@/modules/venues/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Trash2Icon, XIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { JSX } from 'react/jsx-runtime';
 import { toast } from 'sonner';
+import CopyButton from '@/shared/components/app/copy-button';
 
 export default function DeleteVenueDialog({
   id,
@@ -35,7 +35,6 @@ export default function DeleteVenueDialog({
 }) {
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, startTransition] = useTransition();
-  const router = useRouter();
 
   const defaultValues = { id, name: '' };
 
@@ -106,18 +105,16 @@ export default function DeleteVenueDialog({
                     fieldState={fieldState}
                     label="Konfirmasi Nama Tempat & Lapangan"
                     description={
-                      <span>
+                      <span className="flex items-center">
                         Ketik nama{' '}
-                        <Button
+                        <CopyButton
                           type="button"
                           variant="link"
                           size="sm"
-                          className="h-6 p-0 cursor-pointer"
-                          title="Salin"
-                          onClick={() => navigator.clipboard.writeText(name)}
-                        >
-                          {name}
-                        </Button>{' '}
+                          className="p-0 cursor-pointer mx-1"
+                          text={name}
+                          value={name}
+                        />{' '}
                         untuk mengonfirmasi.
                       </span>
                     }
