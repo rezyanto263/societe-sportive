@@ -1,6 +1,7 @@
 import { AuthSchema } from '@/modules/auth/schema';
 import { auth } from '@/core/auth/server';
 import z from 'zod';
+import { ROLE } from '@/modules/auth/constants';
 
 export type SignInData = z.infer<typeof AuthSchema.signIn>;
 export type SignUpData = z.infer<typeof AuthSchema.signUp>;
@@ -18,3 +19,5 @@ export type VerifyPasswordResetData = z.infer<
 >;
 
 export type User = typeof auth.$Infer.Session.user;
+
+export type Role = (typeof ROLE)[keyof typeof ROLE];
