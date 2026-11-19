@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import signUp from '@/modules/auth/actions/sign-up';
 import { useRouter } from 'next/navigation';
 import InputField from '@/shared/components/app/form/input-field';
+import { GENDER } from '@/modules/auth/constants';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function SignUpPage() {
       phoneNumber: '',
       password: '',
       confirmPassword: '',
-      gender: 'male',
+      gender: GENDER.MALE,
     },
   });
 
