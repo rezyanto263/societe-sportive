@@ -1,4 +1,5 @@
 export const cacheTags = {
+  members: { list: 'members:list' },
   sports: { list: 'sports:list' },
   venues: {
     stats: 'venues:stats',
